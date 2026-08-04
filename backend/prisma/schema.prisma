@@ -1,0 +1,393 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+
+// Enums
+
+// user subscription plan
+enum UserPlan {
+  FREE
+  PRO
+}
+
+// community
+enum CommunityRole {
+  OWNER
+  ADMIN
+  MEMBER
+}
+
+enum CommunityCategory {
+    TECHNOLOGY
+    SPORTS
+    MUSIC
+    BUSINESS
+    EDUCATION
+    GAMING
+    HEALTH
+    OTHER
+}
+
+// membershiprequest request status
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// event member role
+enum EventMemberRole {
+  HOST
+  SPEAKER
+  COORDINATOR
+  VOLUNTEER
+}
+
+// activity log action types
+enum ActivityAction {
+  COMMUNITY_CREATED
+  COMMUNITY_UPDATED
+  COMMUNITY_DELETED
+  MEMBERSHIP_REQUESTED
+  MEMBERSHIP_APPROVED
+  MEMBERSHIP_REJECTED
+  MEMBERSHIP_WITHDRAWN
+  MEMBER_REMOVED
+  MEMBER_LEFT
+  MEMBER_ROLE_UPDATED
+  EVENT_CREATED
+  EVENT_UPDATED
+  EVENT_DELETED
+  EVENT_MEMBER_ASSIGNED
+  EVENT_MEMBER_ROLE_UPDATED
+  EVENT_MEMBER_REMOVED
+  EVENT_REGISTRATION_CREATED
+  EVENT_REGISTRATION_CANCELLED
+}
+
+
+// User
+
+model User {
+  id       String @id
+  email    String @unique
+  name     String
+  imageUrl String
+
+  plan UserPlan @default(FREE)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Communities created by user
+  communitiesCreated Community[] @relation("UserCommunities")
+
+  communityNoticesCreated CommunityNotice[]
+
+  communityMessages CommunityMessage[]
+
+  eventNoticesCreated EventNotice[]
+
+  eventMessages EventMessage[]
+
+  // Community memberships
+  memberships Membership[]
+
+  // Community join requests
+  membershipRequests MembershipRequest[]
+
+  // Events created by user
+  eventsCreated Event[]
+
+  // Assigned event roles
+  eventAssignments EventMember[]
+
+  // Registered events
+  eventRegistrations EventRegistration[]
+
+  activitiesPerformed ActivityLog[] @relation("ActivityActor")
+  activitiesTargeted  ActivityLog[] @relation("ActivityTarget")
+}
+
+// Community
+
+model Community {
+  id String @id @default(uuid())
+
+  name        String
+  slug String @unique
+  description String
+  imageUrl    String?
+  imageFileId String?
+  category CommunityCategory
+  location    String
+
+  createdById String
+  createdBy   User   @relation("UserCommunities", fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Approved members
+  members Membership[]
+
+  // Pending join requests
+  requests MembershipRequest[]
+
+  // Community events
+  events       Event[]
+
+  notices CommunityNotice[]
+
+  messages CommunityMessage[]
+
+  activityLogs ActivityLog[]
+}
+
+model CommunityNotice {
+  id String @id @default(uuid())
+
+  title   String
+  content String
+
+  communityId String
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  authorId String
+  author   User @relation(fields: [authorId], references: [id])
+
+  pinned Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([communityId])
+}
+
+
+model CommunityMessage {
+  id String @id @default(uuid())
+
+  content String
+
+  senderId String
+  sender User @relation(fields: [senderId], references: [id])
+
+  communityId String
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([communityId])
+  @@index([createdAt])
+}
+
+// Community Membership
+
+model Membership {
+  id String @id @default(uuid())
+
+  userId      String
+  communityId String
+
+  user User @relation(fields: [userId], references: [id])
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  role CommunityRole @default(MEMBER)
+
+  proofUrl    String?
+  proofFileId String?
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, communityId])
+  @@index([communityId])
+  @@index([userId])
+}
+
+// Membership Requests
+
+model MembershipRequest {
+  id String @id @default(uuid())
+
+  userId      String
+  communityId String
+
+  user User @relation(fields: [userId], references: [id])
+
+  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  proofUrl    String
+  proofFileId String
+
+  status RequestStatus @default(PENDING)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, communityId])
+  @@index([communityId])
+  @@index([userId])
+}
+
+// Event
+
+model Event {
+  id String @id @default(uuid())
+
+  title       String
+  slug String @unique
+  description String
+  date        DateTime
+  time        String   @default("09:00")
+  location    String
+
+  imageUrl    String?
+  imageFileId String?
+  category    String
+  subCategory String
+
+  // Community relation
+  communityId String
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+
+  // Event creator/admin
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Assigned coordinators/speakers/hosts
+  members EventMember[]
+
+  notices EventNotice[]
+
+  messages EventMessage[]
+
+  // Registered attendees
+  registrations EventRegistration[]
+  activityLogs  ActivityLog[]
+}
+
+
+// Event Members
+
+model EventMember {
+  id String @id @default(uuid())
+
+  eventId String
+  userId  String
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id])
+
+  // host, speaker, coordinator, volunteer
+  role EventMemberRole @default(COORDINATOR)
+
+  assignedAt DateTime @default(now())
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+  @@index([userId])
+}
+
+// Event Registration
+
+model EventRegistration {
+  id String @id @default(uuid())
+
+  eventId String
+  userId  String
+
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id])
+
+  registeredAt DateTime @default(now())
+
+  @@unique([eventId, userId])
+  @@index([eventId])
+  @@index([userId])
+}
+
+model EventNotice {
+  id String @id @default(uuid())
+
+  title String
+  content String
+
+  eventId String
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  authorId String
+  author User @relation(fields: [authorId], references: [id])
+
+  pinned Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([eventId])
+}
+
+model EventMessage {
+  id String @id @default(uuid())
+
+  content String
+
+  senderId String
+  sender User @relation(fields: [senderId], references: [id])
+
+  eventId String
+  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([eventId])
+  @@index([createdAt])
+}
+
+model ActivityLog {
+  id String @id @default(uuid())
+
+  // who performed the action
+  actorId String
+  actor   User   @relation("ActivityActor", fields: [actorId], references: [id])
+
+  // what kind of action — keep this a defined enum, not a free string,
+  // so querying/filtering by action type stays reliable
+  action ActivityAction
+
+  communityId String?
+  community   Community? @relation(fields: [communityId], references: [id], onDelete: SetNull)
+
+  // optional: which event this action relates to, if relevant
+  eventId String?
+  event   Event?  @relation(fields: [eventId], references: [id], onDelete: SetNull)
+
+  // optional: which user was the target/subject of the action
+  // (e.g. admin removed THIS member, admin approved THIS user's request)
+  targetUserId String?
+  targetUser   User?   @relation("ActivityTarget", fields: [targetUserId], references: [id])
+
+  // free-form extra context, e.g. { "previousRole": "MEMBER", "newRole": "ADMIN" }
+  metadata Json?
+
+  createdAt DateTime @default(now())
+
+  @@index([communityId])
+  @@index([actorId])
+}
