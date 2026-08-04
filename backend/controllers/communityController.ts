@@ -103,6 +103,7 @@ export const createCommunity = async (
   }
 };
 
+
 export const getCommunities = async (req: Request, res: Response) => {
   try {
     const search = (req.query.search as string) || "";

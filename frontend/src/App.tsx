@@ -1,13 +1,33 @@
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
+import PublicLayout from "./components/layouts/PublicLayout";
+import Marketing from "./pages/marketing";
+import About from "./pages/marketing/About";
+import Contact from "./pages/marketing/Contact";
+import MainLayout from "./components/layouts/MainLayout";
 
-function App() {
-
-
+const App = () => {
   return (
-    <>
-      <h1>hi there</h1>
-    </>
-  )
-}
+    <BrowserRouter>
+      <Routes>
+        <Route element={<PublicLayout />}>
+          <Route index element={<Marketing />} />
+          <Route path="about" element={<About />} />
+          <Route path="contact" element={<Contact />} />
+        </Route>
 
-export default App
+        <Route element={<MainLayout />}>
+
+          <Route path="communities" element={<Communities />} />
+          <Route path="communities/create" element={<CreateCommunityPage />} />
+        </Route>
+
+          
+      </Routes>
+      <Toaster position="bottom-right" />
+    </BrowserRouter>
+  );
+};
+
+export default App;
