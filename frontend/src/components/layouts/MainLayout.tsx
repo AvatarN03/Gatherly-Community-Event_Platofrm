@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
 import { useAuth } from "@clerk/react";
-import Wrapper from "../Wrapper";
+import Wrapper from "./Wrapper";
 import { NonLoginNavbar } from "../NonLoginNavbar";
 import Sidebar from "../Sidebar";
 import Navbar from "../Navbar";
@@ -11,9 +11,13 @@ import { Footer } from "../Footer";
 
 
 const MainLayout = () => {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(true);
 
-    const { isSignedIn: showDashboard } = useAuth();
+    const { isSignedIn} = useAuth();
+    const showDashboard = !!isSignedIn;
+
+    const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+
 
     return (
         <Wrapper>
@@ -28,9 +32,12 @@ const MainLayout = () => {
                     />
                 )}
 
-                <div className="flex min-w-0 flex-1 flex-col lg:ml-4">
+                <div className="flex min-w-0 flex-1 flex-col">
                     {showDashboard && (
-                        <Navbar onOpen={() => setSidebarOpen(true)} />
+                        <Navbar
+                            isSidebarOpen={sidebarOpen}
+                                 onToggleSidebar={toggleSidebar}
+                        />
                     )}
                     <main className="flex-1">
                         <Outlet />

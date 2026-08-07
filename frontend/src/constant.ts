@@ -29,7 +29,7 @@ import {
   Compass,
   CalendarRange,
   ClipboardCheck,
-  Inbox,
+  Inbox, Settings, CalendarDays,
 } from "lucide-react";
 import type { NavSection } from "./types";
 
@@ -143,74 +143,122 @@ export const Aboutgoals = [
 
 // --
 
-
-export const sections: NavSection[] = [
+export const menus = [
   {
-    key: "home",
-    icon: Home,
-    title: "Overview",
-    href: "/dashboard",
-    subItems: [
-      {
-        title: "Dashboard",
-        path: "/dashboard",
-        end: true,
-        icon: LayoutDashboard,
-      },
-    ],
+    title: "Dashboard",
+    path: "/dashboard",
+    icon: LayoutDashboard,
   },
   {
-    key: "Communities",
-    icon: UsersRound,
     title: "Communities",
-    subItems: [
-      { title: "My", path: "/communities/my", end: true, icon: FolderKanban },
-      {
-        title: "Managed",
-        path: "/communities/managed",
-        end: true,
-        icon: ShieldCheck,
-      },
-      {
-        title: "Joined",
-        path: "/communities/joined",
-        end: true,
-        icon: UserCheck,
-      },
-      { title: "Browse", path: "/communities", end: true, icon: Compass },
-    ],
+    path: "/communities",
+    icon: UsersRound,
   },
   {
-    key: "Events",
-    icon: CalendarRange,
     title: "Events",
-    subItems: [
-      { title: "My", path: "/events/my", end: true, icon: Calendar },
-      {
-        title: "Registered",
-        path: "/events/registered",
-        end: true,
-        icon: Ticket,
-      },
-      {
-        title: "Assigned",
-        path: "/events/assigned",
-        end: true,
-        icon: ClipboardCheck,
-      },
-      { title: "Browse", path: "/events", end: true, icon: Search },
-    ],
+    path: "/communities",
+    icon: CalendarDays,
   },
   {
-    key: "Admin",
-    icon: Inbox,
-    title: "Admin",
-    subItems: [
-      {
-        title: "Community Requests",
-        path: "/dashboard/communities-requests",
-        icon: Inbox,
-      },
-    ],
+    title: "Members",
+    path: "/members",
+    icon: UsersRound,
+  }
+];
+
+export const ServicesCards  = [
+  {
+    title:"Community Management",
+    description:"Create public or private communities with custom branding, descriptions, categories, and cover images. Keep everything organized in one dedicated space.",
+    color: "from-sky-200 via-cyan-100 to-white",
+    class1:"col-span-8 ",
+    class2:"flex-col-reverse"
+  },
+  {
+    title:"Event Planning",
+    description:"Schedule online or offline events with detailed information, locations, participant limits, and registration controls.",
+    color: "from-violet-200 via-fuchsia-100 to-white",
+    class1:"col-span-4 row-span-2"
+  },
+  {
+    title:"Member Management",
+    description:"Manage memberships, approve join requests, assign roles, and keep your community organized as it grows.",
+    color: "from-emerald-200 via-teal-100 to-white",
+    class1:"col-span-4 row-span-2 "
+  },
+  {
+    title:"Role-Based Permissions",
+    description:"Give owners, administrators, coordinators, and members the right level of access with built-in role management.",
+    color: "from-sky-200 via-cyan-100 to-white",
+    class1:" col-span-4 row-span-2",
+    class2:"flex-col-reverse"
+  },
+  {
+    title:"Activity Feed",
+    description:"Keep members informed with a real-time activity timeline showing community updates, new events, announcements, and important actions.",
+    color: "from-emerald-200 via-teal-100 to-white",
+    class1:"col-span-4 row-span-2"
+  },
+  {
+    title:"Event Registration",
+    description:"Allow members to register for events, track attendance, and manage participant lists effortlessly.",
+    color: "from-violet-200 via-fuchsia-100 to-white",
+    class1:"col-span-8"
+  },
+
+]
+
+export const HTW_Steps = [
+  {
+    icon: "🏡",
+    title: "Create a Community",
+    desc: "Launch your own public or private community with custom branding, categories, and member settings.",
+    side: "left",
+    position: "top-[10%]",
+  },
+  {
+    icon: "📅",
+    title: "Organize Events",
+    desc: "Schedule online or offline events, set participant limits, locations, and registration rules.",
+    side: "right",
+    position: "top-[30%]",
+  },
+  {
+    icon: "🙋",
+    title: "Members Join",
+    desc: "People discover your community, request to join, register for events, and become active participants.",
+    side: "left",
+    position: "top-[54%]",
+  },
+  {
+    icon: "🎉",
+    title: "Engage & Grow",
+    desc: "Manage members, share updates, host more events, and build a thriving community over time.",
+    side: "right",
+    position: "top-[73%]",
   },
 ];
+
+export const SORT_OPTIONS = [
+  { value: "latest", label: "Latest" },
+  { value: "oldest", label: "Oldest" },
+  { value: "popular", label: "Popular" },
+] as const;
+
+export const COMMUNITY_CATEGORIES = [
+  { value: "General", label: "General" },
+  { value: "Technology", label: "Technology" },
+  { value: "Education", label: "Education" },
+  { value: "Health", label: "Health" },
+  { value: "Sports", label: "Sports" },
+  { value: "Arts", label: "Arts" },
+  { value: "Business", label: "Business" },
+  { value: "Environment", label: "Environment" },
+  { value: "Food", label: "Food" },
+  { value: "Gaming", label: "Gaming" },
+  { value: "Music", label: "Music" },
+  { value: "Travel", label: "Travel" },
+  { value: "Others", label: "Others" },
+] as const;
+
+export const SKELETON_COUNT = 9;

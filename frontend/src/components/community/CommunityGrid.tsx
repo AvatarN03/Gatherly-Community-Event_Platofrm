@@ -1,0 +1,77 @@
+import type {CommunityGridType} from '../../types'
+import {CardsSkeleton} from "../Skeleton.tsx";
+
+import Card from "./Card.tsx"
+import {Error} from "../Error.tsx";
+
+const CommunityGrid = ({
+                           communities,
+                           isLoading,
+                           isFetchingNextPage,
+                           hasNextPage,
+                           search,
+                           sentinelRef,
+                           isRefreshing,
+                           handleRetry,
+                           isError
+                       }: CommunityGridType) => {
+
+    return null
+
+    if (isError) return <Error isRefetching={isRefetching} text={"Failed to load communities"}
+                               handleRetry={handleRetry}/>
+    return (
+        <div className="px-2 md:px-6 pt-6 pb-10">
+
+            {/* Section label */}
+            <div className="flex items-center gap-3 mb-4">
+                <p className="text-mist text-xs uppercase tracking-widest font-medium underline decoration-wavy decoration-cocoa/80 decoration-2 underline-offset-4">
+                    {search ? `Results for "${search}"` : 'All Communities'}
+                </p>
+                {!isLoading && communities.length > 0 && (
+                    <span
+                        className="text-lavender text-sm bg-orchid/10 border border-purple-800 px-2 py-0.5 rounded-full">
+            {communities.length}{hasNextPage ? '+' : ''} communities
+          </span>
+                )}
+            </div>
+
+            {/* Grid — skeletons on initial load, cards otherwise */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {isLoading
+                    ? <CardsSkeleton/>
+                    : communities.map((community) => (
+                        <Card key={community.id} type="community" item={community}/>
+                    ))
+                }
+
+                {/* Append skeletons at the end of existing cards while fetching next page */}
+                {isFetchingNextPage &&
+                    <CardsSkeleton/>
+                }
+            </div>
+
+            {/* Empty state */}
+            {!isLoading && communities.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                    <p className="text-lavender text-4xl mb-1">No communities found</p>
+                    <p className="text-fog text-2xl my-4 font-light">
+                        {search ? 'Try a different search term' : 'Be the first to create one'}
+                    </p>
+
+                </div>
+            )}
+
+            {/* Sentinel */}
+            <div ref={sentinelRef} className="h-4"/>
+
+            {!hasNextPage && communities.length > 0 && (
+                <div className="text-center py-6 text-stone text-xs tracking-wide">
+                    — you've seen all communities —
+                </div>
+            )}
+        </div>
+    )
+}
+
+export default CommunityGrid

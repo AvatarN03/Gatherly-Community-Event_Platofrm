@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import type { SORT_OPTIONS } from "../constant";
 
 
 export interface NavSection {
@@ -15,3 +16,8 @@ export interface NavItem {
   end?: boolean;
   icon: LucideIcon;
 }
+
+
+
+
+export type SortBy = typeof SORT_OPTIONS[number]["value"];

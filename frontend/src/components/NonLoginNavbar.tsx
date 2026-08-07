@@ -30,7 +30,7 @@ export const NonLoginNavbar = () => {
 
   return (
     <header
-      className={`min-h-18 w-full flex items-center border-b-3 border-fog/50 sticky top-0 z-50 rounded-b-md transition-all duration-300 bg-night ${isMenuOpen
+      className={`min-h-18 w-full flex items-center border-b-3 border-night/50 sticky top-0 z-50  transition-all duration-300 bg-mist/70 ${isMenuOpen
         ? "bg-night backdrop-blur-none border-transparent"
         : " backdrop-blur-sm"
         }`}
@@ -43,25 +43,25 @@ export const NonLoginNavbar = () => {
 
           {/* Logo */}
           <Link to="/" onClick={closeMenu}>
-            <div className="text-xl font-semibold tracking-wider text-lavender flex items-center gap-1 group">
+            <div className="text-xl font-semibold tracking-wider flex items-center gap-1 group">
               <img
                 src="/logo.png"
                 alt="Logo"
                 className="w-8 h-8 group-hover:scale-110 transition-transform group-hover:rotate-90 duration-300"
               />
-              <h3 className="hidden md:block text-mist text-lg font-semibold tracking-wider">
+              <h3 className="hidden md:block text-night text-lg font-semibold tracking-wider">
                 G
-                <span className="text-fog/70 group-hover:text-lavender underline-hover transition-colors">
+                <span className="text-slate/70 group-hover:text-night  underline-hover transition-colors">
                   atherly
                 </span>
               </h3>
             </div>
           </Link>
-          <ul className="hidden md:flex gap-2 mx-2 text-slate-400">
+          <ul className="hidden md:flex items-center gap-4 mx-2 text-slate-400">
             {
               HomeNavLinks.map((navLink, idx) => (
                 <li key={idx} className={navLink.classes ?? ""} title={navLink.title}>
-                  <a href={navLink.link} className="hover:text-lavender tracking-wide transition-colors underline-hover text-xs p-2 rounded-sm bg-deep-ocean hover:bg-fog/10">
+                  <a title={navLink.title} href={navLink.link} className="text-slate-800 hover:text-forest underline-hover text-sm">
                     {navLink.name}
                   </a>
                 </li>
@@ -75,14 +75,14 @@ export const NonLoginNavbar = () => {
           <ul className="space-x-4 hidden md:flex">
             <Link
               to="/communities"
-              className="hover:text-lavender flex items-center transition-colors underline-hover text-xs lg:text-sm p-2 rounded-sm bg-deep-ocean hover:bg-fog/10"
+              className="hover:text-forest flex items-center transition-colors underline-hover text-xs lg:text-sm p-2 rounded-sm bg-deep-ocean hover:bg-fog"
             >
               <Users className="w-4 h-4 inline-block mr-1" />
               Communities
             </Link>
             <Link
               to="/events"
-              className="hover:text-lavender flex items-center transition-colors underline-hover text-xs lg:text-sm p-2 rounded-sm bg-deep-ocean hover:bg-fog/10"
+              className="hover:text-forest flex items-center transition-colors underline-hover text-xs lg:text-sm p-2 rounded-sm bg-deep-ocean hover:bg-fog"
             >
               <CalendarDays className="w-4 h-4 inline-block mr-1" />
               Events
@@ -93,7 +93,7 @@ export const NonLoginNavbar = () => {
             {isLoaded ? (
               !isSignedIn ? (
                 <SignInButton mode="modal">
-                  <button className="px-3.5 py-2 rounded-full flex items-center gap-2 text-sm cursor-pointer bg-orchid/30 text-mist transition-colors hover:text-white border-2 border-stone hover:bg-orchid/40">
+                  <button className="px-3.5 py-2  flex items-center gap-2 text-sm cursor-pointer bg-orchid text-mist transition-colors hover:text-white hover:bg-orchid/80">
                     <LogIn className="w-5 h-5" />Sign In
                   </button>
                 </SignInButton>
@@ -101,7 +101,7 @@ export const NonLoginNavbar = () => {
                 <>
                   <Link
                     to="/dashboard"
-                    className="px-2 py-1.5 border-orchid border text-sm text-mist rounded-xl hover:rounded-2xl bg-stone/30 hover:bg-orchid/10 transition-colors"
+                    className="px-2 py-1.5 border-orchid border text-sm text-forest hover:rounded-2xl bg-lavender hover:bg-orchid/10 transition-colors"
                   >
                     Dashboard
                   </Link>

@@ -1,8 +1,15 @@
+import { Hero } from "../../components/marketing/Hero"
+import { Services } from "../../components/marketing/Services"
+import {HTW} from "../../components/marketing/HTW.tsx";
+
 const Marketing = () => {
   return (
-    <div>
-      hi there
-    </div>
+    <main className="w-full bg-mist">
+      <Hero />
+      <Services />
+        <HTW />
+
+  </main>
   )
 }
 

@@ -6,6 +6,8 @@ import Marketing from "./pages/marketing";
 import About from "./pages/marketing/About";
 import Contact from "./pages/marketing/Contact";
 import MainLayout from "./components/layouts/MainLayout";
+import { CreateCommunityPage } from "./pages/community/createCommunity";
+import Communities from "./pages/community/communities.tsx";
 
 const App = () => {
   return (
@@ -23,7 +25,7 @@ const App = () => {
           <Route path="communities/create" element={<CreateCommunityPage />} />
         </Route>
 
-          
+
       </Routes>
       <Toaster position="bottom-right" />
     </BrowserRouter>
