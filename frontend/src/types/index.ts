@@ -17,7 +17,41 @@ export interface NavItem {
   icon: LucideIcon;
 }
 
-
-
-
 export type SortBy = typeof SORT_OPTIONS[number]["value"];
+
+
+// LocationPicker types
+
+
+export type LatLng = [number, number];
+
+export interface LocationData {
+  address: string;
+  lat: number;
+  lng: number;
+}
+
+export interface LocationPickerProps {
+  id:string
+  onLocationChange: (location: LocationData) => void;
+  initialAddress?: string;
+  initialLat?: number;
+  initialLng?: number;
+  disabled?: boolean;
+}
+
+export interface SearchResult {
+  lat: string;
+  lon: string;
+  display_name: string;
+}
+
+export interface NominatimAddress {
+  road?: string;
+  neighbourhood?: string;
+  suburb?: string;
+  city?: string;
+  town?: string;
+  village?: string;
+  state?: string;
+}

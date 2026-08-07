@@ -1,7 +1,6 @@
 import {ArrowUpDown, Search, Tag, X, Users} from 'lucide-react'
-import {COMMUNITY_CATEGORIES, SORT_OPTIONS} from "../../constant.ts"
+import {COMMUNITY_CATEGORIES, FieldClass, SORT_OPTIONS} from "../../constant.ts"
 import type {SortBy} from "../../constant.ts"
-import {inputClass} from "../../pages/community/createCommunity.tsx"
 
 export type CommunityTab = 'all' | 'my' | 'managed' | 'joined'
 
@@ -74,7 +73,7 @@ const CommunityHeader = ({
                                 name="category"
                                 value={category}
                                 onChange={(e) => onCategoryChange(e.target.value)}
-                                className={`${inputClass} pl-10 appearance-none`}
+                                className={`${FieldClass.inputClass} pl-10 appearance-none`}
                             >
                                 <option value="All">All</option>
                                 {COMMUNITY_CATEGORIES.map(({ value, label }) => (
