@@ -12,7 +12,6 @@ datasource db {
   provider = "postgresql"
 }
 
-
 // Enums
 
 // user subscription plan
@@ -29,14 +28,19 @@ enum CommunityRole {
 }
 
 enum CommunityCategory {
-    TECHNOLOGY
-    SPORTS
-    MUSIC
-    BUSINESS
-    EDUCATION
-    GAMING
-    HEALTH
-    OTHER
+  GENERAL
+  TECHNOLOGY
+  EDUCATION
+  HEALTH
+  SPORTS
+  ARTS
+  BUSINESS
+  ENVIRONMENT
+  FOOD
+  GAMING
+  MUSIC
+  TRAVEL
+  OTHERS
 }
 
 // membershiprequest request status
@@ -75,7 +79,6 @@ enum ActivityAction {
   EVENT_REGISTRATION_CREATED
   EVENT_REGISTRATION_CANCELLED
 }
-
 
 // User
 
@@ -126,12 +129,14 @@ model Community {
   id String @id @default(uuid())
 
   name        String
-  slug String @unique
+  slug        String            @unique
   description String
   imageUrl    String?
   imageFileId String?
-  category CommunityCategory
+  category    CommunityCategory
   location    String
+  latitude    Float
+  longitude   Float
 
   createdById String
   createdBy   User   @relation("UserCommunities", fields: [createdById], references: [id])
@@ -146,7 +151,7 @@ model Community {
   requests MembershipRequest[]
 
   // Community events
-  events       Event[]
+  events Event[]
 
   notices CommunityNotice[]
 
@@ -165,7 +170,7 @@ model CommunityNotice {
   community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
 
   authorId String
-  author   User @relation(fields: [authorId], references: [id])
+  author   User   @relation(fields: [authorId], references: [id])
 
   pinned Boolean @default(false)
 
@@ -175,17 +180,16 @@ model CommunityNotice {
   @@index([communityId])
 }
 
-
 model CommunityMessage {
   id String @id @default(uuid())
 
   content String
 
   senderId String
-  sender User @relation(fields: [senderId], references: [id])
+  sender   User   @relation(fields: [senderId], references: [id])
 
   communityId String
-  community Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
+  community   Community @relation(fields: [communityId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -248,7 +252,7 @@ model Event {
   id String @id @default(uuid())
 
   title       String
-  slug String @unique
+  slug        String   @unique
   description String
   date        DateTime
   time        String   @default("09:00")
@@ -281,7 +285,6 @@ model Event {
   registrations EventRegistration[]
   activityLogs  ActivityLog[]
 }
-
 
 // Event Members
 
@@ -325,14 +328,14 @@ model EventRegistration {
 model EventNotice {
   id String @id @default(uuid())
 
-  title String
+  title   String
   content String
 
   eventId String
-  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   authorId String
-  author User @relation(fields: [authorId], references: [id])
+  author   User   @relation(fields: [authorId], references: [id])
 
   pinned Boolean @default(false)
 
@@ -348,10 +351,10 @@ model EventMessage {
   content String
 
   senderId String
-  sender User @relation(fields: [senderId], references: [id])
+  sender   User   @relation(fields: [senderId], references: [id])
 
   eventId String
-  event Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

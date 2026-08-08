@@ -2,7 +2,7 @@
 import { Link, NavLink } from "react-router-dom";
 import {Settings, X} from "lucide-react";
 
-import {menus} from "../constant";
+import {menus} from "../../constant.ts";
 import {useUser} from "@clerk/react";
 import {useEffect} from "react";
 

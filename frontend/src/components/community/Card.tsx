@@ -1,60 +1,57 @@
 import { Link } from 'react-router-dom'
-import { MapPin, Tag, Calendar, Users, Sparkles } from 'lucide-react'
+import { MapPin, Tag } from 'lucide-react'
 
-import { formatDate } from '../../lib/date';
-
-
-
-const Card = ({ type, item, badge }: any) => {
-
-
-    const dateToShow = type === "event" ? item.date : item.createdAt;
+const Card = ({ item }: any) => {
+    const createdBy = item.createdBy;
 
     return (
         <Link
-            to={`/communities/${item.id}`}
-            className="group bg-deep-ocean border border-fog/20 rounded-xl overflow-hidden hover:border-orchid/60 hover:-translate-y-1.5 transition-all duration-300 relative"
+            to={`/communities/${item.slug}`}
+            className="group relative block overflow-hidden border border-stone bg-night text-mist transition-all duration-300 hover:-translate-y-1.5 hover:border-orchid/60"
         >
-            <img
-                src={item.imageUrl || "/image_holder.jpg"}
-                alt={type === "community" ? item.name : item.title}
-                className="w-full h-48 object-cover"
-            />
-            {badge && (
-                <div className="absolute top-1/2 -translate-y-1/2 left-4 z-10">
-                    {badge}
-                </div>
-            )}
-            <div className="absolute top-4 right-4  ">
-
-        <span className="flex items-center gap-1 text-sm font-medium text-mist bg-orchid/70 border-2 border-lavender/80 px-2 py-0.5 rounded-full mb-2 group-hover:bg-black group-hover:text-white transition-colors duration-200">
-          <Tag className="w-3.5 h-3.5" />
-            {item.category}
-        </span>
-
-
-            </div>
-
-            <div className="p-4">
-                <h2 className="text-mist text-base font-medium mb-1 group-hover:text-purple-400 transition-colors truncate">
-                    {type === "community" ? item.name : item.title}
+            {/* Content — fixed height so cards line up regardless of title length */}
+            <div className="flex h-28 flex-col justify-between gap-2 p-4">
+                <h2 className="line-clamp-2 text-base font-medium text-mist transition-colors group-hover:text-purple-400">
+                    {item.name}
                 </h2>
-                <p className="text-lavender text-sm mb-3 line-clamp-2 text-ellipsis group-hover:underline underline-offset-4">
-                    {item.description}
-                </p>
 
-                <div className="flex items-center justify-between mt-auto self-end gap-2 flex-wrap">
-                    <p className="text-mist/60 text-xs flex items-center gap-1 rounded-full border-2 px-2 py-0.5 border-lavender/50">
-                        <MapPin className="w-3 h-3 text-fog" />
+                <div className="flex items-center gap-2">
+                    <p className="flex items-center gap-1 rounded-full border-2 border-lavender/50 px-2 py-0.5 text-xs text-mist/60">
+                        <MapPin className="h-3 w-3 text-fog" />
                         {item.location}
                     </p>
 
-                    <p className="text-mist/60 text-xs flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        {formatDate(dateToShow)}
-                    </p>
+                    <span className="flex items-center gap-1 text-xs text-mist/60">
+                        <Tag className="h-3.5 w-3.5" />
+                        {item.category}
+                    </span>
                 </div>
             </div>
+
+            {/* Image — fixed height, full bleed, no padding */}
+            <img
+                src={item.imageUrl || "/image_holder.jpg"}
+                alt={item.name}
+                className="h-48 w-full object-cover"
+            />
+
+            {/* Created by — fixed height, same left alignment/padding as content */}
+            {createdBy && (
+                <div className="flex h-16 items-center gap-3 border-t border-stone/50 px-4">
+                    <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full">
+                        <img
+                            src={createdBy.imageUrl}
+                            alt={createdBy.name}
+                            className="h-full w-full object-cover"
+                        />
+                    </div>
+
+                    <div className="min-w-0">
+                        <h4 className="truncate text-sm text-mist">{createdBy.name}</h4>
+                        <p className="truncate text-xs text-mist/60">{createdBy.email}</p>
+                    </div>
+                </div>
+            )}
         </Link>
     )
 }

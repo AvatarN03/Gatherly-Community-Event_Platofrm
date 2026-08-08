@@ -20,7 +20,7 @@ export const createCommunity = async (
   res: Response,
 ) => {
   try {
-    const { name, description, location, category } = req.body;
+    const { name, description, location, latitude, longitude, category } = req.body;
 
     const user = req.user!;
 
@@ -62,6 +62,8 @@ export const createCommunity = async (
           imageFileId: req.imageFileId,
           category,
           location,
+          latitude,
+          longitude,
           createdById: user.id,
           members: {
             create: {
@@ -97,9 +99,10 @@ export const createCommunity = async (
       message: "Community created successfully",
       community,
     });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error("CREATE COMMUNITY ERROR:", error);
-    res.status(500).json({ error: "Something went wrong" });
+    // @ts-ignore
+    res.status(500).json({ error: error?.message ?? "Something went wrong" });
   }
 };
 
@@ -138,7 +141,6 @@ export const getCommunities = async (req: Request, res: Response) => {
           id: true,
           name: true,
           slug: true,
-          description: true,
           imageUrl: true,
           category: true,
           location: true,
@@ -147,16 +149,11 @@ export const getCommunities = async (req: Request, res: Response) => {
             select: {
               id: true,
               name: true,
+              email:true,
               imageUrl: true,
             },
-          },
-          _count: {
-            select: {
-              members: true,
-              events: true,
-            }
-          },
-        },
+          }
+        }
       }),
       prisma.community.count({ where }),
     ]);

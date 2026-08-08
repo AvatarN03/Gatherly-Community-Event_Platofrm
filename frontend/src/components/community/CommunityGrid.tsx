@@ -1,8 +1,20 @@
-import type {CommunityGridType} from '../../types'
-import {CardsSkeleton} from "../Skeleton.tsx";
+import {CommunityCardsSkeleton} from "../layouts/Skeleton.tsx";
 
 import Card from "./Card.tsx"
 import {Error} from "../Error.tsx";
+import type {RefObject} from "react";
+
+export interface CommunityGridType {
+    communities: any[];
+    isLoading: boolean;
+    isFetchingNextPage: boolean;
+    hasNextPage: boolean;
+    search: string;
+    sentinelRef: RefObject<HTMLDivElement | null>;
+    isRefetching: boolean;
+    handleRetry: () => void;
+    isError: boolean
+}
 
 const CommunityGrid = ({
                            communities,
@@ -11,35 +23,34 @@ const CommunityGrid = ({
                            hasNextPage,
                            search,
                            sentinelRef,
-                           isRefreshing,
+                           isRefetching,
                            handleRetry,
                            isError
                        }: CommunityGridType) => {
 
-    return null
 
-    if (isError) return <Error isRefetching={isRefetching} text={"Failed to load communities"}
-                               handleRetry={handleRetry}/>
+    if (isError) return <Error isRefetching={isRefetching} handleRetry={handleRetry} text={"Failed to load communities"}
+                               />
     return (
         <div className="px-2 md:px-6 pt-6 pb-10">
 
             {/* Section label */}
             <div className="flex items-center gap-3 mb-4">
-                <p className="text-mist text-xs uppercase tracking-widest font-medium underline decoration-wavy decoration-cocoa/80 decoration-2 underline-offset-4">
+                <p className="text-slate text-xs uppercase tracking-widest font-medium underline decoration-wavy decoration-orchid/80 decoration-2 underline-offset-4">
                     {search ? `Results for "${search}"` : 'All Communities'}
                 </p>
                 {!isLoading && communities.length > 0 && (
                     <span
-                        className="text-lavender text-sm bg-orchid/10 border border-purple-800 px-2 py-0.5 rounded-full">
+                        className="text-forest text-sm bg-orchid/30 border border-purple-800 px-2 py-0.5 rounded-full">
             {communities.length}{hasNextPage ? '+' : ''} communities
           </span>
                 )}
             </div>
 
             {/* Grid — skeletons on initial load, cards otherwise */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 xl:gap-x-12 max-w-7xl mx-auto">
                 {isLoading
-                    ? <CardsSkeleton/>
+                    ? <CommunityCardsSkeleton/>
                     : communities.map((community) => (
                         <Card key={community.id} type="community" item={community}/>
                     ))
@@ -47,7 +58,7 @@ const CommunityGrid = ({
 
                 {/* Append skeletons at the end of existing cards while fetching next page */}
                 {isFetchingNextPage &&
-                    <CardsSkeleton/>
+                    <CommunityCardsSkeleton/>
                 }
             </div>
 

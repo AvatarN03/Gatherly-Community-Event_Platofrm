@@ -15,7 +15,7 @@ const Navbar = ({
     const fullName = user?.fullName || user?.username || "Your account";
 
     return (
-        <header className="sticky top-0 z-30 mb-1 bg-mist p-4 rounded-sm flex  gap-4 border-b border-stone py-6  sm:items-center justify-between">
+        <header className="sticky top-0 z-30 bg-mist p-4 rounded-sm flex  gap-4 border-b border-stone py-6  sm:items-center justify-between">
             <div className="flex items-center justify-center gap-4">
                 <button
                     type="button"
