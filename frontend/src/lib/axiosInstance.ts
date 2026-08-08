@@ -1,4 +1,5 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 interface ClerkWindow {
   session?: {
@@ -28,3 +29,33 @@ api.interceptors.request.use(
   },
   (error) => Promise.reject(error)
 );
+
+
+// ----
+
+
+
+export const handleApiError = (error: unknown) => {
+    console.error("API ERROR:", error);
+
+    if (axios.isAxiosError(error)) {
+        const message = error.response?.data?.error;
+
+        if (typeof message === "string") {
+            toast.error(message);
+            return;
+        }
+
+        if (error.message) {
+            toast.error(error.message);
+            return;
+        }
+    }
+
+    if (error instanceof Error) {
+        toast.error(error.message);
+        return;
+    }
+
+    toast.error("Something went wrong");
+};

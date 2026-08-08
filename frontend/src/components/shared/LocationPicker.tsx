@@ -10,9 +10,9 @@ import {
     LOCATION_ZOOM,
     MIN_SEARCH_LENGTH,
     SEARCH_DEBOUNCE_MS
-} from "../constant.ts";
-import type {LocationPickerProps, LatLng, SearchResult} from "../types";
-import {forwardGeocode, reverseGeocode} from "../lib/geocoding.ts";
+} from "../../constant.ts";
+import type {LocationPickerProps, LatLng, SearchResult} from "../../types";
+import {forwardGeocode, reverseGeocode} from "../../lib/geocoding.ts";
 
 
 // @ts-expect-error - _getIconUrl is a private Leaflet property that must be removed

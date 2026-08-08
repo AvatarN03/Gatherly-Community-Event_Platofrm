@@ -136,7 +136,7 @@ export const menus = [
     },
     {
         title: "Events",
-        path: "/communities",
+        path: "/events",
         icon: CalendarDays,
     },
     {
@@ -226,27 +226,28 @@ export const SORT_OPTIONS = [
 ] as const;
 
 export const COMMUNITY_CATEGORIES = [
-    {value: "General", label: "General"},
-    {value: "Technology", label: "Technology"},
-    {value: "Education", label: "Education"},
-    {value: "Health", label: "Health"},
-    {value: "Sports", label: "Sports"},
-    {value: "Arts", label: "Arts"},
-    {value: "Business", label: "Business"},
-    {value: "Environment", label: "Environment"},
-    {value: "Food", label: "Food"},
-    {value: "Gaming", label: "Gaming"},
-    {value: "Music", label: "Music"},
-    {value: "Travel", label: "Travel"},
-    {value: "Others", label: "Others"},
+    { value: "GENERAL", label: "General" },
+    { value: "TECHNOLOGY", label: "Technology" },
+    { value: "EDUCATION", label: "Education" },
+    { value: "HEALTH", label: "Health" },
+    { value: "SPORTS", label: "Sports" },
+    { value: "ARTS", label: "Arts" },
+    { value: "BUSINESS", label: "Business" },
+    { value: "ENVIRONMENT", label: "Environment" },
+    { value: "FOOD", label: "Food" },
+    { value: "GAMING", label: "Gaming" },
+    { value: "MUSIC", label: "Music" },
+    { value: "TRAVEL", label: "Travel" },
+    { value: "OTHERS", label: "Others" },
 ] as const;
 
 export const SKELETON_COUNT = 9;
 
 export const FieldClass = {
-    formClass: "group flex items-center gap-2 w-full px-3 py-2.5 bg-night/60 border border-fog/20  text-mist placeholder-fog/40 text-xs md:text-sm focus:outline-none focus-within:border-lavender transition-colors cursor-pointer",
+    formClass: "group flex items-center gap-2 w-full p-1 bg-night/60 border border-fog/20  text-mist placeholder-fog/40 text-xs md:text-sm focus:outline-none focus-within:border-lavender transition-colors cursor-pointer",
     inputClass: "w-full px-3 py-2.5 bg-transparent border-transparent outline-none  text-mist placeholder-fog/40 text-sm ",
-    selectClass: "w-full px-3 py-2.5 bg-transparent border-transparent outline-none  text-mist placeholder-fog/40 text-sm ",
+    selectClass: "w-full px-3 py-2.5 bg-night border-transparent outline-none  text-mist placeholder-fog/40 text-sm ",
+    filterClass: "flex items-center gap-2  p-1 bg-night border border-fog/20  text-mist placeholder-fog/40 text-xs md:text-sm cursor-pointer"
 }
 
 

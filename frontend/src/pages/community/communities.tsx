@@ -1,26 +1,23 @@
-import {useCallback, useMemo, useState} from 'react'
+import {useCallback, useState} from 'react'
 
 import toast from 'react-hot-toast'
 
 import { useCommunitiesInfiniteQuery } from '../../hooks/useCommunityQueries'
 
-import type { SortBy } from '../../constant'
-import CommunityHeader, {type CommunityTab} from "../../components/community/CommunityHeader.tsx";
 import {useDebounce} from "../../hooks/useDebounce.ts";
 import {useIntersectionObserver} from "../../hooks/useIntersectionObserver.ts";
 import CommunityGrid from "../../components/community/CommunityGrid.tsx";
-import { useUser} from "@clerk/react";
-import Tabs from "../../components/Tabs.tsx"
+
+import type {CommunityCategory} from "../../types/community.ts";
+import type {SortBy} from "../../types";
+import CommunityHeader from "../../components/community/CommunityHeader.tsx";
 
 const Communities = () => {
 
-    const { isSignedIn } = useUser()
-
     const [search, setSearch] = useState('')
-    const [category, setCategory] = useState('All')
+    const [category, setCategory] = useState<CommunityCategory | "">("");
     const [sortBy, setSortBy] = useState<SortBy>('latest')
-    const [tab, setTab] = useState<CommunityTab>('all')
-    const debouncedSearch = useDebounce(search, 500)
+    const debouncedSearch = useDebounce(search, 1000)
 
     const {
         data,
@@ -31,7 +28,7 @@ const Communities = () => {
         isRefetching,
         refetch,
         isError,
-    } = useCommunitiesInfiniteQuery(debouncedSearch, category, sortBy)
+    } = useCommunitiesInfiniteQuery(debouncedSearch, category, sortBy);
 
     const handleLoadMore = useCallback(() => {
         if (hasNextPage && !isFetchingNextPage) fetchNextPage()
@@ -41,42 +38,22 @@ const Communities = () => {
         setSearch(value)
     }, [])
 
-    const handleCategoryChange = useCallback((value: string) => {
-        setCategory(value)
-    }, [])
+    const handleCategoryChange = useCallback(
+        (value: CommunityCategory | "") => {
+            setCategory(value);
+        },
+        []
+    );
 
     const handleSortByChange = useCallback((value: SortBy) => {
         setSortBy(value)
     }, [])
 
-    const handleTabChange = useCallback((value: CommunityTab) => {
-        setTab(value)
-    }, [])
-
-
     const sentinelRef = useIntersectionObserver(handleLoadMore, {
         rootMargin: '200px',
     })
 
-    const allCommunities = useMemo(
-        () => data?.pages.flatMap((page) => page.communities) ?? [],
-        [data]
-    )
-
-    // Client-side filter for the non-"all" tabs.
-    // TODO: swap isOwner / isManager / isMember for your real Community fields.
-    const communities = useMemo(() => {
-        switch (tab) {
-            case 'my':
-                return allCommunities.filter((c) => c.isOwner)
-            case 'managed':
-                return allCommunities.filter((c) => c.isManager)
-            case 'joined':
-                return allCommunities.filter((c) => c.isMember)
-            default:
-                return allCommunities
-        }
-    }, [allCommunities, tab])
+    const communities = data?.pages.flatMap((page) => page.communities) ?? []
 
 
     const handleRetry = async () => {
@@ -91,15 +68,8 @@ const Communities = () => {
     }
 
     return (
-        <div className="min-h-screen  relative">
-            {
-                isSignedIn  && (
-                    <Tabs
-                    tab={tab}
-                    onTabChange={handleTabChange}
-                    />
-                )
-            }
+        <div className="min-h-screen bg-cocoa/30  relative">
+
             <CommunityHeader
                 title="Communities"
                 search={search}

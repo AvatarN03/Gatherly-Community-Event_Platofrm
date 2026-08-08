@@ -4,12 +4,15 @@ import {useNavigate} from "react-router-dom"
 import {COMMUNITY_CATEGORIES, FieldClass} from "../../constant"
 import type {CommunityCategory, CreateCommunity} from "../../types/community"
 import toast from "react-hot-toast"
-import {AlignLeft, Loader2, MapPin, Tag, Users, X} from "lucide-react"
+import {Loader2, MapPin, Tag, Users, X} from "lucide-react"
 import {Field} from "../../components/Field"
 import * as React from "react";
 import {useCreateCommunityMutation} from "../../hooks/useCommunityMutations.ts";
 import {ImageUpload} from "../../components/ImageUpload.tsx";
-import LocationPicker from "../../components/LocationPicker.tsx";
+import LocationPicker from "../../components/shared/LocationPicker.tsx";
+import RichTextEditor from "../../components/shared/RichTextEditor.tsx";
+import {CommunityValidateForm, getSlateText} from "../../lib/validation.ts";
+import {handleApiError} from "../../lib/axiosInstance.ts";
 
 export const CreateCommunityPage = () => {
     const navigate = useNavigate()
@@ -22,8 +25,8 @@ export const CreateCommunityPage = () => {
         description: '',
         location: '',
         category: COMMUNITY_CATEGORIES[0].value,
-        latitude: null as number | null,
-        longitude: null as number | null,
+        latitude: null,
+        longitude: null,
     })
 
     const {user, isLoaded} = useUser()
@@ -57,29 +60,42 @@ export const CreateCommunityPage = () => {
     const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        // if (!CommunityvalidateForm(formData, setErrors)) return
+        if (!CommunityValidateForm(formData, setErrors)) return
 
-        // const payload = new FormData()
-        // payload.append('name', formData.name)
-        // payload.append('description', formData.description)
-        // payload.append('location', formData.location)
-        // payload.append('category', formData.category)
+        if (formData.latitude === null || formData.longitude === null) {
+            setErrors((prev) => ({
+                ...prev,
+                location: "Please select a location",
+            }));
+            return;
+        }
 
-        // if (imageFile) {
-        //   payload.append('communityImage', imageFile)
-        // }
+        const payload = new FormData()
+        payload.append('name', formData.name)
+        payload.append('description', formData.description)
+        payload.append('location', formData.location)
+        payload.append('category', formData.category)
+        payload.append("latitude", String(formData.latitude));
+        payload.append("longitude", String(formData.longitude));
+
+        if (imageFile) {
+            payload.append('communityImage', imageFile)
+        }
 
         try {
-            //   const data = await toast.promise(createMutation.mutateAsync(payload), {
-            //     loading: 'Creating community...',
-            //     success: 'Community created successfully!',
-            //     error: 'Failed to create community',
-            //   })
+            const data = await toast.promise(createMutation.mutateAsync(payload), {
+                loading: 'Creating community...',
+                success: 'Community created successfully!',
+                error: 'Failed to create community',
+            })
 
-            //   navigate(`/communities/${data.id}`)
-        } catch (error: any) {
-            console.error(error);
-            toast.error(error.response?.data?.error ?? error.message);
+            toast.success(data.message)
+
+            navigate(`/communities/${data.community.slug}`, {
+                replace: true,
+            });
+        } catch (error: unknown) {
+            handleApiError(error);
         }
     }
 
@@ -99,7 +115,7 @@ export const CreateCommunityPage = () => {
 
 
     return (
-        <div className=" bg-slate py-10 px-4 min-h-dvh">
+        <div className=" bg-black py-10 px-4 min-h-dvh">
             <div className="max-w-6xl mx-auto">
                 <div className="mb-8">
                     <h1 className="text-2xl font-medium text-mist">Create a Community</h1>
@@ -131,7 +147,7 @@ export const CreateCommunityPage = () => {
                                     initialAddress={formData.location}
                                     initialLat={formData.latitude ?? undefined}
                                     initialLng={formData.longitude ?? undefined}
-                                    onLocationChange={({ address, lat, lng }) => {
+                                    onLocationChange={({address, lat, lng}) => {
                                         setFormData(prev => ({
                                             ...prev,
                                             location: address,
@@ -155,7 +171,7 @@ export const CreateCommunityPage = () => {
                                     )}
                                     <p className="text-mist font-medium truncate">{formData.name}</p>
                                     {formData.description && (
-                                        <p className="text-fog/75 text-sm mt-1 line-clamp-2">{formData.description}</p>
+                                        <p className="text-fog/75 text-sm mt-1 line-clamp-2">{getSlateText(formData.description)}</p>
                                     )}
                                     <div className="flex items-center gap-3 mt-3">
                                         {formData.location && (
@@ -197,7 +213,8 @@ export const CreateCommunityPage = () => {
                                 </div>
                             </Field>
 
-                            <Field label="Category *" attach={"category"} error={errors.category} classes={'cursor-pointer'}>
+                            <Field label="Category *" attach={"category"} error={errors.category}
+                                   classes={'cursor-pointer'}>
                                 <div className={FieldClass.formClass}>
                                     <Tag className="w-6 h-6 text-stone transition  group-focus-within:text-cocoa"/>
                                     <select
@@ -218,22 +235,19 @@ export const CreateCommunityPage = () => {
                             </Field>
 
 
-                            <Field label="Description *" error={errors.description}>
-                                <div className="relative">
-                                    <AlignLeft className="absolute left-3 top-3 w-4 h-4 text-stone"/>
-                                    <textarea
-                                        name="description"
-                                        value={formData.description}
-                                        onChange={handleChange}
-                                        disabled={createMutation.isPending}
-                                        placeholder="What is this community about?"
-                                        rows={5}
-                                        className={`${FieldClass.formClass} pl-10 resize-none`}
-                                    />
-                                </div>
+                            <Field label="Description *" attach={"description"} error={errors.description}>
+                                <RichTextEditor
+                                    value={formData.description}
+                                    onChange={(value) =>
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            description: value,
+                                        }))
+                                    }
+                                    disabled={createMutation.isPending}
+                                    placeholder="What is this community about?"
+                                />
                             </Field>
-
-
 
 
                         </div>

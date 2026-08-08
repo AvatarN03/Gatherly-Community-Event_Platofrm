@@ -4,10 +4,11 @@ import type { PaginatedCommunities } from "../types/community";
 
 const communityApi = {
   createCommunity: async (formData: FormData) : Promise<any> => {
-    const { data } = await api.post("/communities", formData, {
+    const result = await api.post("/communities", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    return data;
+    console.log(result)
+    return result.data;
   },
 
   getAllCommunities: async (

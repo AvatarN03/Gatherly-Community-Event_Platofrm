@@ -4,6 +4,7 @@ import {
   EventMemberRole,
 } from "../generated/prisma/enums.ts";
 import { EVENT_SUBCATEGORIES } from "../constant.ts";
+import {getSlateText} from "../utils/editor.ts";
 
 // Zod enums from Prisma enums
 const categoryEnum = z.enum(
@@ -21,17 +22,33 @@ export const communitySchema = z.object({
     .min(3, "Name must be at least 3 characters")
     .max(60, "Name must be under 60 characters"),
 
-  description: z
-    .string()
-    .trim()
-    .min(10, "Description must be at least 10 characters")
-    .max(1000, "Description must be under 1000 characters"),
+    description: z
+        .string()
+        .refine(
+            (value) => getSlateText(value).length >= 10,
+            "Description must be at least 10 characters"
+        )
+        .refine(
+            (value) => getSlateText(value).length <= 1000,
+            "Description must be under 1000 characters"
+        ),
+
 
   location: z
     .string()
     .trim()
     .min(2, "Location is required")
-    .max(100, "Location must be under 100 characters"),
+    .max(100, "Location must be under 150 characters"),
+
+    latitude: z.coerce
+        .number()
+        .min(-90, "Invalid latitude")
+        .max(90, "Invalid latitude"),
+
+    longitude: z.coerce
+        .number()
+        .min(-180, "Invalid longitude")
+        .max(180, "Invalid longitude"),
 
   category: categoryEnum,
 });

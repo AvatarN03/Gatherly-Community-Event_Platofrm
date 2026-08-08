@@ -4,6 +4,7 @@ import type { ZodType } from "zod";
 export const validate =
   (schema: ZodType) => (req: Request, res: Response, next: NextFunction) => {
     const result = schema.safeParse(req.body);
+    console.log(result)
 
     if (!result.success) {
       return res.status(400).json({

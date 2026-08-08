@@ -4,14 +4,14 @@ import { Outlet } from "react-router-dom";
 import { useAuth } from "@clerk/react";
 import Wrapper from "./Wrapper";
 import { NonLoginNavbar } from "../NonLoginNavbar";
-import Sidebar from "../Sidebar";
+import Sidebar from "./Sidebar.tsx";
 import Navbar from "../Navbar";
 import { Footer } from "../Footer";
 
 
 
 const MainLayout = () => {
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
 
     const { isSignedIn} = useAuth();
     const showDashboard = !!isSignedIn;
@@ -32,7 +32,7 @@ const MainLayout = () => {
                     />
                 )}
 
-                <div className="flex min-w-0 flex-1 flex-col">
+                <div className="flex min-w-0 flex-1 flex-col gap-0">
                     {showDashboard && (
                         <Navbar
                             isSidebarOpen={sidebarOpen}
