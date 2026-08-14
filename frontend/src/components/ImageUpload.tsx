@@ -77,13 +77,13 @@ export const ImageUpload = ({
   }
 
   return (
-    <Field label={label}>
+    <Field attach="image" label={label}>
       {displayUrl ? (
         // Wrapping the whole preview in a <label> means clicking anywhere on
         // the image (not just a dedicated button) opens the file picker —
         // covers both "swap the existing image" and "pick a different new
         // one" without adding any extra buttons/space.
-        <label className="relative rounded-xl overflow-hidden border border-fog cursor-pointer group block">
+        <label className="relative rounded-md overflow-hidden border border-teal-800 cursor-pointer group block">
           <img src={displayUrl} alt="Preview" className="w-full h-64 object-cover" />
 
           <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-colors">
@@ -117,6 +117,7 @@ export const ImageUpload = ({
 
           <input
             type="file"
+            id="image"
             accept={ACCEPTED_TYPES.join(',')}
             onChange={handleImageChange}
             disabled={disabled}
@@ -124,12 +125,13 @@ export const ImageUpload = ({
           />
         </label>
       ) : (
-        <label className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-fog/60 hover:border-fog rounded-xl cursor-pointer transition-colors group">
-          <ImagePlus className="w-8 h-8 text-lavender group-hover:text-mist transition-colors mb-3" />
-          <p className="text-mist text-sm font-medium">Click to upload image</p>
-          <p className="text-fog text-xs mt-1 underline underline-offset-2">PNG, JPG, WEBP up to {MAX_FILE_SIZE_MB} MB</p>
+        <label className="flex flex-col items-center justify-center h-56 border-2 border-dashed border-teal-800/70 hover:border-teal-800 rounded-xl cursor-pointer transition-colors group">
+          <ImagePlus className="w-8 h-8 text-cyan-600 group-hover:text-mist transition-colors mb-3" />
+          <p className="text-teal-800 text-sm font-medium">Click to upload image</p>
+          <p className="text-slate-600 text-xs mt-1 underline underline-offset-2">PNG, JPG, WEBP up to {MAX_FILE_SIZE_MB} MB</p>
           <input
-            type="file"
+              type="file"
+              id="image"
             accept={ACCEPTED_TYPES.join(',')}
             onChange={handleImageChange}
             disabled={disabled}

@@ -20,7 +20,7 @@ export const Field = (
     <div className="flex flex-col gap-1.5">
 
         <label htmlFor={attach}
-               className={`text-xs uppercase tracking-widest text-lavender font-medium ${classes}`}>     {label}
+               className={`text-xs uppercase tracking-widest text-teal-900 font-medium ${classes}`}>     {label}
         </label>
 
         {children}

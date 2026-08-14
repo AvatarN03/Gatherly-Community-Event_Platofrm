@@ -8,10 +8,10 @@ const PublicLayout = () => {
   return (
     <>
       <NonLoginNavbar />
-      <Wrapper>
+      {/*<Wrapper>
         <Outlet />
-      </Wrapper>
-      <Footer />
+      </Wrapper>*/}
+      {/*<Footer />*/}
     </>
   );
 };
