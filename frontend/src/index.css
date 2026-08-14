@@ -11,19 +11,6 @@
     --font-sans: "Inter", sans-serif;
     --font-heading: "Sora", sans-serif;
 
-    --color-mist: #FAF9F5;
-    --color-fog: #bec6e9;
-    --color-lavender: #afb5f9;
-
-    --color-night: #0c1926;
-    --color-forest: #004540;
-    --color-cocoa: #FFE175;
-    --color-orchid: #52154E;
-
-    --color-light-ocean: #B8E7F5;
-    --color-slate: #182f3d;
-    --color-stone: #70787a;
-
 }
 
 @utility bg-dots {
@@ -72,9 +59,9 @@
         position: absolute;
         left: 0;
         bottom: 0;
-        height: 1.5px;
+        height: 2px;
         width: 0;
-        background-color: var(--color-forest);
+        background-color: #0f766e;
         transition: width 0.3s ease;
     }
 
