@@ -20,7 +20,7 @@ export const createCommunity = async (
   res: Response,
 ) => {
   try {
-    const { name, description, location, latitude, longitude, category } = req.body;
+    const { name, description, location, latitude, longitude, category, tags } = req.body;
 
     const user = req.user!;
 
@@ -64,6 +64,7 @@ export const createCommunity = async (
           location,
           latitude,
           longitude,
+          tags: tags ?? [],
           createdById: user.id,
           members: {
             create: {
@@ -144,15 +145,7 @@ export const getCommunities = async (req: Request, res: Response) => {
           imageUrl: true,
           category: true,
           location: true,
-          createdAt: true,
-          createdBy: {
-            select: {
-              id: true,
-              name: true,
-              email:true,
-              imageUrl: true,
-            },
-          }
+          tags:true,
         }
       }),
       prisma.community.count({ where }),
@@ -171,6 +164,80 @@ export const getCommunities = async (req: Request, res: Response) => {
     console.error(err);
     res.status(500).json({
       message: "Failed to fetch communities",
+    });
+  }
+};
+
+
+export const getCommunityBySlug = async (
+    req: Request<{ slug: string }>,
+    res: Response
+) => {
+  try {
+    const { slug } = req.params;
+    const user = req.user;
+
+    const community = await prisma.community.findUnique({
+      where: {
+        slug,
+      },
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+        imageUrl: true,
+        category: true,
+        location: true,
+        createdAt: true,
+
+        _count: {
+          select: {
+            members: true,
+          },
+        },
+
+        ...(user && {
+          members: {
+            where: {
+              userId: user.id,
+            },
+            select: {
+              role: true,
+            },
+          },
+        }),
+      },
+    });
+
+    if (!community) {
+      return res.status(404).json({
+        message: "Community not found",
+      });
+    }
+
+    const currentUserRole =
+        user && community.members.length > 0
+            ? community.members[0].role
+            : null;
+
+    return res.status(200).json({
+      community: {
+        id: community.id,
+        name: community.name,
+        slug: community.slug,
+        imageUrl: community.imageUrl,
+        category: community.category,
+        location: community.location,
+        createdAt: community.createdAt,
+        membersCount: community._count.members,
+      },
+      userMembership: currentUserRole
+    });
+  } catch (error) {
+    console.error("getCommunityBySlug:", error);
+
+    return res.status(500).json({
+      message: "Failed to fetch community",
     });
   }
 };

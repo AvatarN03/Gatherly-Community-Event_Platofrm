@@ -1,59 +1,66 @@
-import { Link } from 'react-router-dom'
-import { MapPin, Tag } from 'lucide-react'
+import { Link } from "react-router-dom";
+import { MapPin, Tag } from "lucide-react";
+import type { CommunityView } from "../../types/community.ts";
 
-const Card = ({ item }: any) => {
-    const createdBy = item.createdBy;
+const Card = ({ community }: { community: CommunityView }) => {
+  const tags = community.tags ?? [];
 
-    return (
-        <Link
-            to={`/communities/${item.slug}`}
-            className="group relative block overflow-hidden border border-stone bg-night text-mist transition-all duration-300 hover:-translate-y-1.5 hover:border-orchid/60"
-        >
-            {/* Content — fixed height so cards line up regardless of title length */}
-            <div className="flex h-28 flex-col justify-between gap-2 p-4">
-                <h2 className="line-clamp-2 text-base font-medium text-mist transition-colors group-hover:text-purple-400">
-                    {item.name}
-                </h2>
+  return (
+    <Link
+      to={`/communities/${community.slug}`}
+      className="group relative flex flex-col gap-4 overflow-hidden rounded-xl border border-teal-600/50 bg-teal-200 p-3 text-teal-900 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-teal-600 hover:shadow-lg hover:shadow-teal-100"
+    >
+      <img
+        src="/card-back.svg"
+        alt=""
+        aria-hidden="true"
+        className="pointer-events-none absolute h-full w-full object-fill scale-150 -right-14 -bottom-14 opacity-75"
+      />
 
-                <div className="flex items-center gap-2">
-                    <p className="flex items-center gap-1 rounded-full border-2 border-lavender/50 px-2 py-0.5 text-xs text-mist/60">
-                        <MapPin className="h-3 w-3 text-fog" />
-                        {item.location}
-                    </p>
+      {/* Image — inset from the card edge, own rounded border */}
+      <div className="relative z-10 h-48 w-full overflow-hidden rounded-xl bg-teal-50 ring-1 ring-inset ring-black/5">
+        <img
+          src={community.imageUrl || "/image_holder.jpg"}
+          alt={community.name}
+          className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
+        />
+        {/* soft base shadow so the photo settles into the card instead of cutting off sharply */}
+        <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/10 to-transparent" />
+      </div>
 
-                    <span className="flex items-center gap-1 text-xs text-mist/60">
-                        <Tag className="h-3.5 w-3.5" />
-                        {item.category}
-                    </span>
-                </div>
-            </div>
+      {/* Content — separated from the image by real spacing (gap-4 above) */}
+      <div className="relative flex flex-col gap-3 px-1 pb-1">
+        <h2 className="relative line-clamp-2 text-xl font-semibold leading-tight text-teal-950 transition-colors group-hover:text-teal-900">
+          {community.name}
+        </h2>
 
-            {/* Image — fixed height, full bleed, no padding */}
-            <img
-                src={item.imageUrl || "/image_holder.jpg"}
-                alt={item.name}
-                className="h-48 w-full object-cover"
-            />
+        <div className="relative flex items-center justify-between gap-3">
+          <p className="flex min-w-0 items-center gap-1.5 text-sm text-teal-700">
+            <MapPin className="h-4 w-4 shrink-0 text-teal-500" />
+            <span className="truncate">{community.location}</span>
+          </p>
 
-            {/* Created by — fixed height, same left alignment/padding as content */}
-            {createdBy && (
-                <div className="flex h-16 items-center gap-3 border-t border-stone/50 px-4">
-                    <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full">
-                        <img
-                            src={createdBy.imageUrl}
-                            alt={createdBy.name}
-                            className="h-full w-full object-cover"
-                        />
-                    </div>
+          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-teal-600 px-2.5 py-1 text-xs font-medium text-white shadow-sm">
+            <Tag className="h-3.5 w-3.5" />
+            <span className="max-w-[7rem] truncate">{community.category}</span>
+          </span>
+        </div>
 
-                    <div className="min-w-0">
-                        <h4 className="truncate text-sm text-mist">{createdBy.name}</h4>
-                        <p className="truncate text-xs text-mist/60">{createdBy.email}</p>
-                    </div>
-                </div>
-            )}
-        </Link>
-    )
-}
+        {tags.length > 0 && (
+          <div className="relative flex flex-wrap gap-2 pt-3">
+            {tags.map((t) => (
+              <span
+                key={t}
+                className="rounded-full border border-teal-100 bg-teal-50/80 px-2.5 py-1 text-xs font-medium text-teal-700"
+              >
+                {t}
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+    </Link>
+  );
+};
 
-export default Card
+export default Card;

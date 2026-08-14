@@ -4,11 +4,14 @@ import {
   EventMemberRole,
 } from "../generated/prisma/enums.ts";
 import { EVENT_SUBCATEGORIES } from "../constant.ts";
-import {getSlateText} from "../utils/editor.ts";
+import { getSlateText } from "../utils/editor.ts";
 
 // Zod enums from Prisma enums
 const categoryEnum = z.enum(
-  Object.values(CommunityCategory) as [CommunityCategory, ...CommunityCategory[]],
+  Object.values(CommunityCategory) as [
+    CommunityCategory,
+    ...CommunityCategory[],
+  ],
 );
 
 const eventMemberRoleEnum = z.enum(
@@ -22,17 +25,16 @@ export const communitySchema = z.object({
     .min(3, "Name must be at least 3 characters")
     .max(60, "Name must be under 60 characters"),
 
-    description: z
-        .string()
-        .refine(
-            (value) => getSlateText(value).length >= 10,
-            "Description must be at least 10 characters"
-        )
-        .refine(
-            (value) => getSlateText(value).length <= 1000,
-            "Description must be under 1000 characters"
-        ),
-
+  description: z
+    .string()
+    .refine(
+      (value) => getSlateText(value).length >= 10,
+      "Description must be at least 10 characters",
+    )
+    .refine(
+      (value) => getSlateText(value).length <= 1000,
+      "Description must be under 1000 characters",
+    ),
 
   location: z
     .string()
@@ -40,17 +42,44 @@ export const communitySchema = z.object({
     .min(2, "Location is required")
     .max(100, "Location must be under 150 characters"),
 
-    latitude: z.coerce
-        .number()
-        .min(-90, "Invalid latitude")
-        .max(90, "Invalid latitude"),
+  latitude: z.coerce
+    .number()
+    .min(-90, "Invalid latitude")
+    .max(90, "Invalid latitude"),
 
-    longitude: z.coerce
-        .number()
-        .min(-180, "Invalid longitude")
-        .max(180, "Invalid longitude"),
+  longitude: z.coerce
+    .number()
+    .min(-180, "Invalid longitude")
+    .max(180, "Invalid longitude"),
 
   category: categoryEnum,
+  // 👇 Add tags
+  tags: z.preprocess(
+    (val) => {
+      if (Array.isArray(val)) return val;
+  
+      if (typeof val === "string") {
+        try {
+          const parsed = JSON.parse(val);
+          return Array.isArray(parsed) ? parsed : [];
+        } catch {
+          return [];
+        }
+      }
+  
+      return [];
+    },
+    z
+      .array(
+        z
+          .string()
+          .trim()
+          .min(1, "Tag cannot be empty")
+          .max(30, "Tag must be under 30 characters"),
+      )
+      .max(10, "You can have at most 10 tags")
+      .optional(),
+  ),
 });
 
 export type CommunityInput = z.infer<typeof communitySchema>;
@@ -76,17 +105,20 @@ export const eventSchema = z
       .string()
       .trim()
       .min(1, "Date is required")
-      .refine((val) => {
-        const selectedDate = new Date(val);
-        selectedDate.setHours(0, 0, 0, 0);
+      .refine(
+        (val) => {
+          const selectedDate = new Date(val);
+          selectedDate.setHours(0, 0, 0, 0);
 
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
+          const today = new Date();
+          today.setHours(0, 0, 0, 0);
 
-        return selectedDate >= today;
-      }, {
-        message: "Event date cannot be in the past",
-      }),
+          return selectedDate >= today;
+        },
+        {
+          message: "Event date cannot be in the past",
+        },
+      ),
 
     time: z.string().trim().min(1, "Time is required"),
 
@@ -99,10 +131,7 @@ export const eventSchema = z
 
     category: categoryEnum,
 
-    subCategory: z
-      .string()
-      .trim()
-      .min(1, "Sub-category is required"),
+    subCategory: z.string().trim().min(1, "Sub-category is required"),
 
     members: z.preprocess((val) => {
       if (Array.isArray(val)) return val;
@@ -120,8 +149,7 @@ export const eventSchema = z
     }, z.array(memberSchema).default([])),
   })
   .refine(
-    (data) =>
-      EVENT_SUBCATEGORIES[data.category].includes(data.subCategory),
+    (data) => EVENT_SUBCATEGORIES[data.category].includes(data.subCategory),
     {
       path: ["subCategory"],
       message: "Invalid sub-category for the selected category",

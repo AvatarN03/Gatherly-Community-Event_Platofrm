@@ -137,6 +137,7 @@ model Community {
   location    String
   latitude    Float
   longitude   Float
+  tags        String[]
 
   createdById String
   createdBy   User   @relation("UserCommunities", fields: [createdById], references: [id])
