@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { requiredAuth } from "../middlewares/auth.ts";
+import {optionalAuth, requiredAuth, requiredUser} from "../middlewares/auth.ts";
 import { CreateOrDeleteCommunityLimiter } from "../middlewares/rateLimit.ts";
 import { validate } from "../middlewares/validate.ts";
 
@@ -10,17 +10,23 @@ import { communitySchema } from "../prisma/schemas-validate.ts";
 
 import { resizeImageIfNeeded } from "../utils/resizeImage.ts";
 
-import { createCommunity, getCommunities } from "../controllers/communityController.ts";
+import {createCommunity, getCommunities, getCommunityBySlug} from "../controllers/communityController.ts";
 
 
 const communityRoute = Router();
 
 communityRoute.get("/", getCommunities);
 
+communityRoute.get(
+    "/:slug",
+    optionalAuth,
+    getCommunityBySlug
+)
+
 // Route: multer runs first → uploadToImageKit → your controller
 communityRoute.post(
   "/",
-  requiredAuth,
+  requiredUser,
   CreateOrDeleteCommunityLimiter,
   upload.single("communityImage"),
   validate(communitySchema),

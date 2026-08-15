@@ -175,7 +175,7 @@ export const getCommunityBySlug = async (
 ) => {
   try {
     const { slug } = req.params;
-    const user = req.user;
+    const userId = req.userId;
 
     const community = await prisma.community.findUnique({
       where: {
@@ -189,6 +189,8 @@ export const getCommunityBySlug = async (
         category: true,
         location: true,
         createdAt: true,
+        tags: true,
+        description: true,
 
         _count: {
           select: {
@@ -196,10 +198,10 @@ export const getCommunityBySlug = async (
           },
         },
 
-        ...(user && {
+        ...(userId && {
           members: {
             where: {
-              userId: user.id,
+              userId,
             },
             select: {
               role: true,
@@ -216,7 +218,7 @@ export const getCommunityBySlug = async (
     }
 
     const currentUserRole =
-        user && community.members.length > 0
+        userId && community.members.length > 0
             ? community.members[0].role
             : null;
 
@@ -227,6 +229,8 @@ export const getCommunityBySlug = async (
         slug: community.slug,
         imageUrl: community.imageUrl,
         category: community.category,
+        description: community.description,
+        tags: community.tags,
         location: community.location,
         createdAt: community.createdAt,
         membersCount: community._count.members,

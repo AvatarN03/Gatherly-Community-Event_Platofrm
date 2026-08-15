@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { COMMUNITY_CATEGORIES, FieldClass } from "../../constant";
 import type { CommunityCategory, CreateCommunity } from "../../types/community";
 import toast from "react-hot-toast";
-import { ArrowLeft, Loader2, MapPin, Tag, Users, X } from "lucide-react";
+import { ArrowLeft, Loader2, Tag, Users, X } from "lucide-react";
 import { Field } from "../../components/Field";
 import * as React from "react";
 import { useCreateCommunityMutation } from "../../hooks/useCommunityMutations.ts";
 import { ImageUpload } from "../../components/ImageUpload.tsx";
 import LocationPicker from "../../components/shared/LocationPicker.tsx";
 import RichTextEditor from "../../components/shared/RichTextEditor.tsx";
-import { CommunityValidateForm, getSlateText } from "../../lib/validation.ts";
+import { CommunityValidateForm } from "../../lib/validation.ts";
 import { handleApiError } from "../../lib/axiosInstance.ts";
 
 export const CreateCommunityPage = () => {
@@ -161,14 +161,13 @@ export const CreateCommunityPage = () => {
             people can discover and join it.
           </p>
         </div>
-
         {createMutation.isError && (
           <div className="mb-6 flex items-center gap-3 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
             <X className="w-4 h-4 shrink-0" />
             Failed to create community. Please try again.
           </div>
         )}
-
+        // TODO: Add the logo and banner seperate
         <form onSubmit={handleSubmit}>
           {/* 2-column on desktop */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -321,7 +320,6 @@ export const CreateCommunityPage = () => {
                   }}
                 />
               </Field>
-
             </div>
           </div>
 

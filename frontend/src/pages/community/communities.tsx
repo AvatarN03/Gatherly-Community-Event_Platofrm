@@ -68,7 +68,7 @@ const Communities = () => {
     }
 
     return (
-        <div className="min-h-screen bg-cocoa/30  relative">
+        <div className="min-h-screen bg-teal-200/20  relative">
 
             <CommunityHeader
                 title="Communities"

@@ -23,6 +23,14 @@ const communityApi = {
     });
     return data;
   },
+
+
+  getCommunityBySlug: async (slug: string): any => {
+
+      const { data } = await api.get(`/communities/${slug}`);
+      
+      return data;
+  }
 }
 
 

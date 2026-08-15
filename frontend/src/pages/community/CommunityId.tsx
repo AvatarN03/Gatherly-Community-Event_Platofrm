@@ -1,11 +1,23 @@
-import React from 'react';
+import { useState } from "react";
+import { CommunityInfo } from "../../components/community/CommunityInfo";
+import CommunityActivity from "../../components/community/CommunityActivity";
 
-const Community = () => {
-    return (
-        <div>
-            
-        </div>
-    );
+const CommunityId = () => {
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
+  const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
+  const [isLeaveModalOpen, setIsLeaveModalOpen] = useState(false);
+
+  return (
+    <div>
+      <CommunityInfo
+        onJoin={() => setIsJoinModalOpen(true)}
+        onLeave={() => setIsLeaveModalOpen(true)}
+        onWithdraw={() => setIsWithdrawModalOpen(true)}
+      />
+
+      <CommunityActivity />
+    </div>
+  );
 };
 
-export default Community;
+export default CommunityId;

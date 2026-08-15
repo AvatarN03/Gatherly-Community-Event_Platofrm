@@ -29,7 +29,7 @@ export const NonLoginNavbar = () => {
 
   return (
     <header
-      className={`min-h-18 w-full flex items-center border-b border-slate-500 shadow-md sticky top-0 z-50  transition-all duration-300`}
+      className={`min-h-18 w-full flex items-center bg-teal-50/50 backdrop-blur-xs border-b border-slate-500 shadow-md sticky top-0 z-50  transition-all duration-300`}
     >
       <nav
         ref={menuRef}
