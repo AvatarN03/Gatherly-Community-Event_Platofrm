@@ -8,7 +8,7 @@ const Card = ({ community }: { community: CommunityView }) => {
   return (
     <Link
       to={`/communities/${community.slug}`}
-      className="group relative flex flex-col gap-4 overflow-hidden rounded-xl border border-teal-600/50 bg-teal-200 p-3 text-teal-900 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-teal-600 hover:shadow-lg hover:shadow-teal-100"
+      className="group relative flex flex-col gap-4 overflow-hidden rounded-md border border-teal-600/50 bg-teal-200 p-3 text-teal-900 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:border-teal-600 hover:shadow-lg hover:shadow-teal-100 h-96"
     >
       <img
         src="/card-back.svg"
@@ -25,7 +25,7 @@ const Card = ({ community }: { community: CommunityView }) => {
           className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.06]"
         />
         {/* soft base shadow so the photo settles into the card instead of cutting off sharply */}
-        <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-black/10 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-10 bg-linear-to-t from-black/10 to-transparent" />
       </div>
 
       {/* Content — separated from the image by real spacing (gap-4 above) */}
@@ -40,9 +40,9 @@ const Card = ({ community }: { community: CommunityView }) => {
             <span className="truncate">{community.location}</span>
           </p>
 
-          <span className="flex shrink-0 items-center gap-1.5 rounded-full bg-teal-600 px-2.5 py-1 text-xs font-medium text-white shadow-sm">
+          <span className="flex shrink-0 items-center gap-1.5 rounded-md bg-teal-700 px-2.5 py-1 text-xs font-medium text-white shadow-sm">
             <Tag className="h-3.5 w-3.5" />
-            <span className="max-w-[7rem] truncate">{community.category}</span>
+            <span className="group-hover:text-amber-200">{community.category}</span>
           </span>
         </div>
 

@@ -1,16 +1,14 @@
 import {SKELETON_COUNT} from "../../constant.ts";
 
 export const CardSkeleton = () => (
-    <div className="bg-slate-500 border border-slate  overflow-hidden animate-pulse">
-        <div className="p-4 space-y-2">
-            <div className="h-6 bg-slate rounded"/>
-            <div className="h-4 bg-slate rounded w-4/5"/>
-            <div className={"flex items-center justify-end gap-4 mt-8"}>
-            <div className="h-6 w-12 bg-slate rounded "/>
-            <div className="h-6 w-12 bg-slate rounded "/>
-            </div>
+    <div className=" rounded-md  overflow-hidden animate-pulse p-3">
+        <div className="w-full h-48 bg-teal-200 rounded-md"/>
+        <div className="mt-2 space-y-2">
+            <div className="h-6 bg-teal-200 rounded"/>
+            <div className="h-4 bg-teal-200 rounded w-4/5"/>
+            <div className="h-6  bg-teal-200 rounded "/>
+            
         </div>
-        <div className="w-full h-48 bg-slate"/>
     </div>
 )
 
