@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { PushPin, MoreVertical, Pencil, Trash2, User } from "lucide-react";
-import { formatDistanceToNow } from "date-fns";
+import { Pin, MoreVertical, Pencil, Trash2 } from "lucide-react";
+import { formatDistanceToNow } from "../../lib/date";
 import type { CommunityNotice } from "../../types/community";
 
 interface NoticeCardProps {
@@ -11,6 +11,7 @@ interface NoticeCardProps {
   onDelete?: () => void;
   onTogglePin?: () => void;
 }
+
 
 const NoticeCard = ({ notice, isAdminOrCreator, isAuthor, onEdit, onDelete, onTogglePin }: NoticeCardProps) => {
   const [showMenu, setShowMenu] = useState(false);
@@ -25,7 +26,7 @@ const NoticeCard = ({ notice, isAdminOrCreator, isAuthor, onEdit, onDelete, onTo
           <div className="flex items-center gap-2 mb-3">
             <h3 className="text-lg font-semibold text-night">{notice.title}</h3>
             {notice.pinned && (
-              <PushPin className="w-4 h-4 text-orange-500 fill-orange-500" />
+              < Pin className="w-4 h-4 text-orange-500 fill-orange-500" />
             )}
           </div>
 
@@ -52,12 +53,12 @@ const NoticeCard = ({ notice, isAdminOrCreator, isAuthor, onEdit, onDelete, onTo
             </div>
             <span className="text-stone/40">•</span>
             <span>
-              {formatDistanceToNow(new Date(notice.createdAt), { addSuffix: true })}
+              {formatDistanceToNow(new Date(notice.createdAt))}
             </span>
             {notice.updatedAt !== notice.createdAt && (
               <>
                 <span className="text-stone/40">•</span>
-                <span>Edited {formatDistanceToNow(new Date(notice.updatedAt), { addSuffix: true })}</span>
+                <span>Edited {formatDistanceToNow(new Date(notice.updatedAt))}</span>
               </>
             )}
           </div>
@@ -91,7 +92,7 @@ const NoticeCard = ({ notice, isAdminOrCreator, isAuthor, onEdit, onDelete, onTo
                     }}
                     className={`flex w-full items-center gap-2 px-3 py-2 text-sm transition ${notice.pinned ? "text-orange-600 hover:bg-orange-50" : "text-stone-700 hover:bg-stone/10"}`}
                   >
-                    <PushPin className="w-4 h-4" />
+                    <Pin className="w-4 h-4" />
                     <span>{notice.pinned ? "Unpin notice" : "Pin notice"}</span>
                   </button>
                 )}

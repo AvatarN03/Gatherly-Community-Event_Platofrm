@@ -149,7 +149,12 @@ export const eventSchema = z
     }, z.array(memberSchema).default([])),
   })
   .refine(
-    (data) => EVENT_SUBCATEGORIES[data.category].includes(data.subCategory),
+    (data) => {
+      const category = data.category.charAt(0) + data.category.slice(1).toLowerCase();
+      return EVENT_SUBCATEGORIES[category as keyof typeof EVENT_SUBCATEGORIES].includes(
+        data.subCategory,
+      );
+    },
     {
       path: ["subCategory"],
       message: "Invalid sub-category for the selected category",

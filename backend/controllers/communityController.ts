@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import {
   ActivityAction,
@@ -7,15 +7,13 @@ import {
 } from "../generated/prisma/enums.ts";
 
 
-import { CommunityInput } from "../prisma/schemas-validate.ts";
+import type { CommunityInput } from "../prisma/schemas-validate.ts";
 
 import { prisma } from "../lib/prisma.ts";
-
-import { slugify } from "../utils/slugify.ts";
-
-import { PLAN_LIMITS } from "../constant.ts";
-import { SortOption } from "../type.ts";
 import imagekit from "../lib/imageKit.ts";
+import { slugify } from "../utils/slugify.ts";
+import { PLAN_LIMITS } from "../constant.ts";
+import type { SortOption } from "../type.ts";
 
 export const createCommunity = async (
   req: Request<{}, {}, CommunityInput>,
@@ -112,7 +110,7 @@ export const createCommunity = async (
 
 export const getCommunities = async (req: Request, res: Response) => {
   try {
-    const search = (req.query.search.trim() as string) || "";
+    const search = typeof req.query.search === "string" ? req.query.search.trim() : "";
     const category = req.query.category as CommunityCategory | undefined;
     const sortBy = (req.query.sortBy as SortOption) ?? "latest";
     const page = Number(req.query.page) || 1;
@@ -174,142 +172,197 @@ export const getCommunities = async (req: Request, res: Response) => {
 export const getCommunityBySlug = async (
     req: Request<{ slug: string }>,
     res: Response
-) => {
-  try {
-    const { slug } = req.params;
-    const userId = req.userId;
+  ) => {
+    try {
+      const { slug } = req.params;
+      const userId = req.userId;
 
-    const community = await prisma.community.findUnique({
-      where: {
-        slug,
-      },
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        imageUrl: true,
-        category: true,
-        location: true,
-        createdAt: true,
-        tags: true,
-        description: true,
-
-        _count: {
-          select: {
-            members: true,
-          },
+      const community = await prisma.community.findUnique({
+        where: {
+          slug,
         },
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          imageUrl: true,
+          category: true,
+          location: true,
+          createdAt: true,
+          tags: true,
+          description: true,
 
-        ...(userId && {
-          members: {
-            where: {
-              userId,
-            },
+          _count: {
             select: {
-              role: true,
+              members: true,
             },
           },
-        }),
-      },
-    });
 
-    if (!community) {
-      return res.status(404).json({
-        message: "Community not found",
+          ...(userId && {
+            members: {
+              where: {
+                userId,
+              },
+              select: {
+                role: true,
+              },
+            },
+          }),
+        },
       });
-    }
 
-    const currentUserRole =
+      if (!community) {
+        return res.status(404).json({
+          message: "Community not found",
+        });
+      }
+
+      const currentUserRole =
         userId && community.members.length > 0
             ? community.members[0].role
             : null;
 
-    return res.status(200).json({
-      community: {
-        id: community.id,
-        name: community.name,
-        slug: community.slug,
-        imageUrl: community.imageUrl,
-        category: community.category,
-        description: community.description,
-        tags: community.tags,
-        location: community.location,
-        createdAt: community.createdAt,
-        membersCount: community._count.members,
-      },
-      userMembership: currentUserRole
-    });
-  } catch (error) {
-    console.error("getCommunityBySlug:", error);
+      // Fetch pinned notice and recent notice for this community
+      const [pinnedNotice, recentNotice] = await Promise.all([
+        prisma.communityNotice.findFirst({
+          where: {
+            communityId: community.id,
+            pinned: true,
+          },
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            pinned: true,
+            createdAt: true,
+            author: {
+              select: {
+                id: true,
+                name: true,
+                imageUrl: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        }),
+        prisma.communityNotice.findFirst({
+          where: {
+            communityId: community.id,
+          },
+          select: {
+            id: true,
+            title: true,
+            content: true,
+            pinned: true,
+            createdAt: true,
+            author: {
+              select: {
+                id: true,
+                name: true,
+                imageUrl: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        }),
+      ]);
 
-    return res.status(500).json({
-      message: "Failed to fetch community",
-    });
-  }
-};
+      return res.status(200).json({
+        community: {
+          id: community.id,
+          name: community.name,
+          slug: community.slug,
+          imageUrl: community.imageUrl,
+          category: community.category,
+          description: community.description,
+          tags: community.tags,
+          location: community.location,
+          createdAt: community.createdAt,
+          membersCount: community._count.members,
+        },
+        userMembership: currentUserRole,
+        pinnedNotice,
+        recentNotice,
+      });
+    } catch (error) {
+      console.error("getCommunityBySlug:", error);
+
+      return res.status(500).json({
+        message: "Failed to fetch community",
+      });
+    }
+  };
 
 
 export const updateCommunity = async (req: Request, res: Response) => {
   const { slug } = req.params as { slug: string };
-  const { name, description, category, location } = req.body;
-
-  const user = req.user!;
 
   try {
-    const data: any = {
-      name,
-      description,
-      category,
-      location,
-    };
+    const { name, description, location, latitude, longitude, category, tags } = req.body;
 
-    if (req.imageUrl) {
-      data.imageUrl = req.imageUrl;
-      data.imageFileId = req.imageFileId;
-    }
+    const user = req.user!;
 
-
-
-    const community = await prisma.community.findFirst({
-      where: {
-        slug,
-        createdById: user.id,
-      },
+    const community = await prisma.community.findUnique({
+      where: { slug },
+      select: { id: true, imageUrl: true, imageFileId: true },
     });
 
     if (!community) {
-      return res.status(403).json({
-        error: "here Not authorized",
-      });
+      return res.status(404).json({ error: "Community not found" });
     }
 
-    const updatedCommunity = await prisma.$transaction(async (tx) => {
-      const updated = await tx.community.update({
+    const updated = await prisma.$transaction(async (tx) => {
+      const updatedCommunity = await tx.community.update({
         where: { id: community.id },
-        data,
+        data: {
+          name,
+          description,
+          location,
+          category,
+          latitude,
+          longitude,
+          tags: tags ?? [],
+          ...(req.imageUrl && {
+            imageUrl: req.imageUrl,
+            imageFileId: req.imageFileId,
+          }),
+        },
       });
 
       await tx.activityLog.create({
         data: {
           actorId: user.id,
-          action: "COMMUNITY_UPDATED",
+          action: ActivityAction.COMMUNITY_UPDATED,
           communityId: community.id,
           metadata: {
-            changedFields: Object.keys(data),
+            changedFields: [
+              "name",
+              "description",
+              "location",
+              "latitude",
+              "longitude",
+              "category",
+              "tags",
+              ...(req.imageUrl ? ["imageUrl", "imageFileId"] : []),
+            ],
           },
         },
       });
 
-      return updated;
+      return updatedCommunity;
     });
 
-    res.status(200).json({
-      slug: updatedCommunity.slug,
+    return res.status(200).json({
+      slug: updated.slug,
       message: "Community updated successfully",
     });
   } catch (error) {
-    console.log("UPDATE COMMUNITY ERROR:", error);
-    res.status(500).json({ error: "Something went wrong" });
+    console.error("UPDATE COMMUNITY ERROR:", error);
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };
 
@@ -335,7 +388,6 @@ export const deleteCommunity = async (
       return res.status(404).json({ error: "Community not found" });
     }
 
-    // 🔐 Authorization check
     if (community.createdById !== user.id) {
       return res
         .status(403)
@@ -345,21 +397,15 @@ export const deleteCommunity = async (
     if (community.imageFileId) {
       try {
         await imagekit.files.delete(community.imageFileId);
-        console.log(
-          "Community image deleted from ImageKit:",
-          community.imageFileId,
-        );
       } catch (error) {
-        console.log("Image deletion failed:", error);
+        console.error("Community image deletion failed:", error);
       }
     }
 
-    // log BEFORE deleting the community — communityId FK now uses
-    // onDelete: SetNull, so this row survives, just loses the FK link
     await prisma.activityLog.create({
       data: {
         actorId: user.id,
-        action: "COMMUNITY_DELETED",
+        action: ActivityAction.COMMUNITY_DELETED,
         communityId: community.id,
         metadata: { name: community.name },
       },
@@ -369,9 +415,9 @@ export const deleteCommunity = async (
       where: { id: community.id },
     });
 
-    res.json({ message: "Community deleted successfully" });
+    return res.json({ message: "Community deleted successfully" });
   } catch (error) {
     console.error("DELETE COMMUNITY ERROR:", error);
-    res.status(500).json({ error: "Something went wrong" });
+    return res.status(500).json({ error: "Something went wrong" });
   }
 };

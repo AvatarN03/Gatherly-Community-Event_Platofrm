@@ -22,6 +22,8 @@ const CommunityProvider = () => {
 
   const community = data?.community;
   const userMembership = data?.userMembership ?? null;
+  const pinnedNotice = data?.pinnedNotice ?? null;
+  const recentNotice = data?.recentNotice ?? null;
 
   const currentUserId = clerkUser?.id ?? null;
   const isAuthenticated = !!clerkUser;
@@ -57,6 +59,8 @@ const CommunityProvider = () => {
         community,
         userMembership,
         userRequest,
+        pinnedNotice,
+        recentNotice,
         isCreator,
         isAdmin,
         isMember,

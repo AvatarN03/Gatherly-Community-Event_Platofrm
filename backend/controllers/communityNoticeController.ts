@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import type { Request, Response } from "express";
 
 import { prisma } from "../lib/prisma.ts";
 
@@ -9,7 +9,10 @@ export const getCommunityNotices = async (
 ) => {
   try {
     const { id: communityId } = req.params;
-    const userId = req.userId;
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
     // Check if user is a member of the community
     const membership = await prisma.membership.findUnique({
@@ -63,7 +66,10 @@ export const getCommunityNotice = async (
 ) => {
   try {
     const { id: communityId, noticeId } = req.params;
-    const userId = req.userId;
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
     // Check if user is a member of the community
     const membership = await prisma.membership.findUnique({
@@ -123,7 +129,10 @@ export const createCommunityNotice = async (
 ) => {
   try {
     const { id: communityId } = req.params;
-    const userId = req.userId;
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     const { title, content, pinned = false } = req.body;
 
     // Check if user is a member of the community and has admin/owner role
@@ -181,7 +190,10 @@ export const updateCommunityNotice = async (
 ) => {
   try {
     const { id: communityId, noticeId } = req.params;
-    const userId = req.userId;
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
     const { title, content, pinned } = req.body;
 
     // Get the notice and check permissions
@@ -259,7 +271,10 @@ export const deleteCommunityNotice = async (
 ) => {
   try {
     const { id: communityId, noticeId } = req.params;
-    const userId = req.userId;
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
     // Get the notice and check permissions
     const notice = await prisma.communityNotice.findUnique({
@@ -316,7 +331,10 @@ export const togglePinCommunityNotice = async (
 ) => {
   try {
     const { id: communityId, noticeId } = req.params;
-    const userId = req.userId;
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
 
     // Check if user is a member of the community and has admin/owner role
     const membership = await prisma.membership.findUnique({

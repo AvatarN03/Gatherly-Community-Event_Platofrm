@@ -2,10 +2,14 @@ import { createContext, useContext } from 'react'
 
 
 
+import type { CommunityNotice } from "../types/community";
+
 type CommunityContextValue = {
     community: any
     userMembership: any
     userRequest?: any
+    pinnedNotice: CommunityNotice | null
+    recentNotice: CommunityNotice | null
     isCreator: boolean
     isAdmin: boolean
     isMember: boolean
