@@ -87,7 +87,7 @@ export const ImageUpload = ({
           <img src={displayUrl} alt="Preview" className="w-full h-64 object-cover" />
 
           <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-colors">
-            <span className="opacity-0 group-hover:opacity-100 text-mist text-xs font-medium px-3 py-1.5 bg-slate-900/80 rounded-lg transition-opacity">
+            <span className="opacity-0 group-hover:opacity-100 text-slate-50 text-xs font-medium px-3 py-1.5 bg-teal-600 rounded-lg transition-opacity">
               Click to {file ? 'change' : 'replace'} image
             </span>
           </div>
@@ -103,14 +103,14 @@ export const ImageUpload = ({
                 clearImage()
               }}
               disabled={disabled}
-              className="absolute top-3 right-3 p-1.5 bg-slate-900/80 hover:bg-slate-900 rounded-full text-mist cursor-pointer transition-colors z-10"
+              className="absolute top-3 right-3 p-1.5 bg-teal-400/80 rounded-full  cursor-pointer transition-colors z-10"
             >
               <X className="w-3.5 h-3.5" />
             </button>
           )}
 
           {file && (
-            <div className="absolute bottom-0 left-0 right-0 px-4 py-2 bg-slate-900/60 text-fog/80 text-xs truncate">
+            <div className="absolute bottom-0 left-0 right-0 px-4 py-2 bg-teal-700/60 text-slate-50 text-xs truncate">
               {file.name}
             </div>
           )}

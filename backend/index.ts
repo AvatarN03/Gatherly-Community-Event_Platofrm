@@ -5,6 +5,9 @@ import { clerkMiddleware } from "@clerk/express";
 
 
 import communityRoute from "./routes/communityRoute.ts";
+import userRoute from "./routes/userRoute.ts";
+import memberRoute from "./routes/memberRoute.ts";
+import communityNoticeRoute from "./routes/communityNoticeRoute.ts";
 
 
 const app = express();
@@ -15,6 +18,9 @@ app.use(express.json());
 app.use(clerkMiddleware());
 
 app.use("/api/communities", communityRoute);
+app.use("/api/membership", memberRoute);
+app.use("/api/users", userRoute);
+app.use("/api/community-notices", communityNoticeRoute);
 
 
 app.get("/", (_req, res) => {

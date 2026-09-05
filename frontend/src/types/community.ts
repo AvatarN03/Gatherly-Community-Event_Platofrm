@@ -1,8 +1,10 @@
 import type { COMMUNITY_CATEGORIES } from "../constant";
+import type {User} from "./index.ts";
 
 export interface CreateCommunity {
   name: string;
   description: string;
+  tags?: string[];
   imageUrl?: string;
   category: string;
   location: string;
@@ -12,15 +14,12 @@ export interface CreateCommunity {
 
 export interface CommunityView {
   id: string;
+  slug:string;
   name: string;
   imageUrl: string;
   location: string;
-  description: string;
   category: string;
-  createdAt: string;
-  _count: {
-    members: number;
-  };
+  tags: string[];
 }
 
 export interface PaginatedCommunities {
@@ -34,3 +33,29 @@ export interface PaginatedCommunities {
 }
 
 export type CommunityCategory = (typeof COMMUNITY_CATEGORIES)[number]["value"];
+
+export interface CommunityNotice {
+  id: string;
+  title: string;
+  content: string;
+  pinned: boolean;
+  createdAt: string;
+  updatedAt: string;
+  author: {
+    id: string;
+    name: string;
+    imageUrl: string;
+  };
+}
+
+export interface CreateCommunityNotice {
+  title: string;
+  content: string;
+  pinned?: boolean;
+}
+
+export interface UpdateCommunityNotice {
+  title?: string;
+  content?: string;
+  pinned?: boolean;
+}

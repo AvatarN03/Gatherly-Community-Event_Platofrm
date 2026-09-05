@@ -4,14 +4,8 @@ import { Link } from "react-router-dom"
 
 export const Hero = () => {
   return (
-    <section id="home" className="w-full py-20 px-4 max-w-7xl mx-auto  h-dvh">
-      <div className="relative w-full bg-forest p-12  space-y-25 before:absolute
-    before:content-['']
-    before:-inset-8
-    before:border-4
-    before:border-dashed
-    before:border-night/40
-    before:pointer-events-none">
+    <section id="home" className="w-full py-20 px-4 text-white bg-[#044F37]  h-dvh">
+
         <h1 className="text-3xl md:text-6xl font-semibold leading-normal tracking-wide mb-6 text-center text-fog">
             Where Communities{" "} <br/>
             <span className="relative inline-block px-1.5 z-10 text-slate">
@@ -43,7 +37,6 @@ export const Hero = () => {
         </div>
 
 
-      </div>
     </section>
   )
 }

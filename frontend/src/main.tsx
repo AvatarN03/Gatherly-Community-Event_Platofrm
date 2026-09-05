@@ -6,6 +6,7 @@ import { ClerkProvider } from '@clerk/react'
 import { dark } from "@clerk/themes";
 
 import App from './App.tsx'
+import UserProvider from './provider/UserProvider.tsx'
 import './index.css'
 
 const queryClient = new QueryClient();
@@ -25,7 +26,9 @@ createRoot(document.getElementById('root')!).render(
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <App />
+        <UserProvider>
+          <App />
+        </UserProvider>
       </QueryClientProvider>
 
     </ClerkProvider>

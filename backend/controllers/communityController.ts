@@ -6,6 +6,7 @@ import {
   CommunityRole,
 } from "../generated/prisma/enums.ts";
 
+
 import { CommunityInput } from "../prisma/schemas-validate.ts";
 
 import { prisma } from "../lib/prisma.ts";
@@ -14,6 +15,7 @@ import { slugify } from "../utils/slugify.ts";
 
 import { PLAN_LIMITS } from "../constant.ts";
 import { SortOption } from "../type.ts";
+import imagekit from "../lib/imageKit.ts";
 
 export const createCommunity = async (
   req: Request<{}, {}, CommunityInput>,
@@ -110,7 +112,7 @@ export const createCommunity = async (
 
 export const getCommunities = async (req: Request, res: Response) => {
   try {
-    const search = (req.query.search as string) || "";
+    const search = (req.query.search.trim() as string) || "";
     const category = req.query.category as CommunityCategory | undefined;
     const sortBy = (req.query.sortBy as SortOption) ?? "latest";
     const page = Number(req.query.page) || 1;
@@ -243,5 +245,133 @@ export const getCommunityBySlug = async (
     return res.status(500).json({
       message: "Failed to fetch community",
     });
+  }
+};
+
+
+export const updateCommunity = async (req: Request, res: Response) => {
+  const { slug } = req.params as { slug: string };
+  const { name, description, category, location } = req.body;
+
+  const user = req.user!;
+
+  try {
+    const data: any = {
+      name,
+      description,
+      category,
+      location,
+    };
+
+    if (req.imageUrl) {
+      data.imageUrl = req.imageUrl;
+      data.imageFileId = req.imageFileId;
+    }
+
+
+
+    const community = await prisma.community.findFirst({
+      where: {
+        slug,
+        createdById: user.id,
+      },
+    });
+
+    if (!community) {
+      return res.status(403).json({
+        error: "here Not authorized",
+      });
+    }
+
+    const updatedCommunity = await prisma.$transaction(async (tx) => {
+      const updated = await tx.community.update({
+        where: { id: community.id },
+        data,
+      });
+
+      await tx.activityLog.create({
+        data: {
+          actorId: user.id,
+          action: "COMMUNITY_UPDATED",
+          communityId: community.id,
+          metadata: {
+            changedFields: Object.keys(data),
+          },
+        },
+      });
+
+      return updated;
+    });
+
+    res.status(200).json({
+      slug: updatedCommunity.slug,
+      message: "Community updated successfully",
+    });
+  } catch (error) {
+    console.log("UPDATE COMMUNITY ERROR:", error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+export const deleteCommunity = async (
+  req: Request<{ slug: string }>,
+  res: Response,
+) => {
+  const { slug } = req.params;
+  const user = req.user!;
+
+  try {
+    const community = await prisma.community.findUnique({
+      where: { slug },
+      select: {
+        name: true,
+        createdById: true,
+        imageFileId: true,
+        id: true,
+      },
+    });
+
+    if (!community) {
+      return res.status(404).json({ error: "Community not found" });
+    }
+
+    // 🔐 Authorization check
+    if (community.createdById !== user.id) {
+      return res
+        .status(403)
+        .json({ error: "Not authorized to delete this community" });
+    }
+
+    if (community.imageFileId) {
+      try {
+        await imagekit.files.delete(community.imageFileId);
+        console.log(
+          "Community image deleted from ImageKit:",
+          community.imageFileId,
+        );
+      } catch (error) {
+        console.log("Image deletion failed:", error);
+      }
+    }
+
+    // log BEFORE deleting the community — communityId FK now uses
+    // onDelete: SetNull, so this row survives, just loses the FK link
+    await prisma.activityLog.create({
+      data: {
+        actorId: user.id,
+        action: "COMMUNITY_DELETED",
+        communityId: community.id,
+        metadata: { name: community.name },
+      },
+    });
+
+    await prisma.community.delete({
+      where: { id: community.id },
+    });
+
+    res.json({ message: "Community deleted successfully" });
+  } catch (error) {
+    console.error("DELETE COMMUNITY ERROR:", error);
+    res.status(500).json({ error: "Something went wrong" });
   }
 };

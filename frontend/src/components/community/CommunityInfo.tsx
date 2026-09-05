@@ -21,7 +21,7 @@ export const CommunityInfo = ({
   const tags = community?.tags ?? [];
 
   return (
-    <div className="px-5 py-5">
+    <div className="px-5 py-5 max-w-7xl mx-auto">
       <div className="grid grid-cols-3 items-start gap-4">
         {/*Left part*/}
         <div className="col-span-2 space-y-8 ">
@@ -69,7 +69,7 @@ export const CommunityInfo = ({
 
         {/*Right part */}
         <div className="col-span-1 p-2 space-y-10">
-          
+
           <div className="p-4 rounded-md bg-teal-50 border border-teal-600 shadow-sm space-y-3">
             <h4 className="text-base font-semibold text-gray-800">
               Community Actions

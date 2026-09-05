@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { CalendarDays, Menu, Users, X, LogIn, SquarePen } from "lucide-react";
+import { CalendarDays, Users, LogIn, SquarePen } from "lucide-react";
+import { MorphIcon } from "morphicons/react";
+import { Menu as MenuIcon, X as XIcon } from "lucide";
 import { SignInButton, SignUpButton, useAuth, UserButton, useUser } from "@clerk/react";
 
 export const NonLoginNavbar = () => {
@@ -33,9 +35,9 @@ export const NonLoginNavbar = () => {
     >
       <nav
         ref={menuRef}
-        className="grid grid-cols-2 md:grid-cols-3 items-center max-w-400 mx-auto w-full px-3"
+        className="flex items-center justify-between max-w-400 mx-auto w-full px-3 gap-4"
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 shrink-0">
 
           {/* Logo */}
           <Link to="/" onClick={closeMenu}>
@@ -73,7 +75,7 @@ export const NonLoginNavbar = () => {
           </Link>
         </div>
 
-        <div className="hidden md:flex justify-center">
+        <div className="hidden md:flex flex-1 justify-center">
           <ul className="space-x-4 flex ">
             <Link
               to="/communities"
@@ -92,20 +94,22 @@ export const NonLoginNavbar = () => {
           </ul>
         </div>
 
-        <div className="flex items-center justify-end gap-2 md:gap-4">
+        <div className="flex items-center justify-end gap-2 md:gap-4 shrink-0">
           {/* Desktop links */}
           <div className="min-w-24 hidden md:flex items-center justify-center gap-3">
             {isLoaded ? (
               !isSignedIn ? (
                 <div className="flex items-center gap-2">
                 <SignInButton mode="modal">
-                  <button className=" px-2 py-1 rounded-md flex items-center gap-2 text-sm cursor-pointer text-slate-800 hover:text-slate-900 transition-colors border-2 border-teal-600  hover:bg-slate-100">
+                  <button className="px-3 py-1.5 rounded-md flex items-center gap-2 text-sm cursor-pointer border border-emerald-600/60 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 hover:text-emerald-950 transition-colors shadow-sm">
+                    <LogIn className="w-4 h-4" />
                     Sign In
                   </button>
                   </SignInButton>
 
                 <SignUpButton mode="modal">
-                  <button className="px-2 py-1.5 rounded-md flex items-center bg-teal-400   hover:bg-teal-300 text-black  gap-2 text-sm cursor-pointer transition-colors shadow-lg">
+                  <button className="px-3 py-1.5 rounded-md flex items-center gap-2 text-sm cursor-pointer bg-emerald-500 text-white hover:bg-emerald-600 transition-colors shadow-md shadow-emerald-200">
+                    <SquarePen className="w-4 h-4" />
                     Sign Up
                   </button>
                   </SignUpButton>
@@ -136,11 +140,10 @@ export const NonLoginNavbar = () => {
             className="block w-8 h-8 md:hidden"
             onClick={() => setIsMenuOpen((prev) => !prev)}
           >
-            {isMenuOpen ? (
-              <X  />
-            ) : (
-              <Menu  />
-            )}
+            <MorphIcon
+              icon={isMenuOpen ? XIcon : MenuIcon}
+              className="w-5 h-5 text-slate-800"
+            />
           </button>
         </div>
 

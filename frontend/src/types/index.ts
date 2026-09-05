@@ -2,6 +2,13 @@ import type { LucideIcon } from "lucide-react";
 import type { SORT_OPTIONS } from "../constant";
 
 
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  imageUrl: string;
+}
+
 export interface NavSection {
   key: string;
   icon: LucideIcon;
@@ -55,3 +62,14 @@ export interface NominatimAddress {
   village?: string;
   state?: string;
 }
+
+
+export type MutateObjectResponse = {
+  id?: string;
+  message?: string;
+  error?: string;
+  slug?: string;
+}
+
+
+export type RequestStatus = "PENDING" | "APPROVED" | "REJECTED";

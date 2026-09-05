@@ -3,10 +3,14 @@ import { Outlet, useNavigate, useParams } from "react-router-dom";
 import { useUser } from "@clerk/react";
 import { CommunityContext } from "../context/communityContext";
 import { AlertTriangle } from "lucide-react";
+import toast from "react-hot-toast";
 import CommunityTopbar from "../components/community/CommunityTopbar.tsx";
 import { IsEmpty } from "../components/IsEmpty.tsx";
 import { useCommunityBySlugQuery } from "../hooks/useCommunityQueries.ts";
 import { CommunityDetailSkeleton } from "../components/layouts/Skeleton.tsx";
+import DeleteCommunityModal from "../components/community/DeleteCommunityModal.tsx";
+import { useUserRequestQuery } from "../hooks/useMembershipQueries.ts";
+import { useDeleteCommunityMutation } from "../hooks/useCommunityMutations.ts";
 
 const CommunityProvider = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -27,11 +31,11 @@ const CommunityProvider = () => {
 
   const shouldFetchUserRequest = !!clerkUser && !!community && !isMember;
 
-  // const { data: userRequest } = useUserRequestQuery(id, {
-  //     enabled: shouldFetchUserRequest,
-  // })
+  const { data: userRequest } = useUserRequestQuery(community?.id, {
+      enabled: shouldFetchUserRequest,
+  })
 
-  // const deleteMutation = useDeleteCommunityMutation()
+  const deleteMutation = useDeleteCommunityMutation()
 
   // Also wait on `isAuthLoaded`: the query stays disabled until Clerk
   // finishes loading, so `isLoading` alone would briefly read `false`
@@ -52,7 +56,7 @@ const CommunityProvider = () => {
       value={{
         community,
         userMembership,
-        // userRequest,
+        userRequest,
         isCreator,
         isAdmin,
         isMember,
@@ -61,23 +65,26 @@ const CommunityProvider = () => {
       }}
     >
       <div className="bg-night/40 min-h-screen">
-        <CommunityTopbar />
+        <CommunityTopbar onDelete={() => setShowDeleteModal(true)} />
 
         <Outlet />
 
-        {/*{clerkUser && isCreator && (*/}
-        {/*    <DeleteCommunityModal*/}
-        {/*        communityName={community.name}*/}
-        {/*        open={showDeleteModal}*/}
-        {/*        isPending={deleteMutation.isPending}*/}
-        {/*        onCancel={() => setShowDeleteModal(false)}*/}
-        {/*        onConfirm={() =>*/}
-        {/*            deleteMutation.mutate(id!, {*/}
-        {/*                onSuccess: () => navigate('/communities'),*/}
-        {/*            })*/}
-        {/*        }*/}
-        {/*    />*/}
-        {/*)}*/}
+        {clerkUser && isCreator && (
+            <DeleteCommunityModal
+                communityName={community.name}
+                open={showDeleteModal}
+                isPending={deleteMutation.isPending}
+                onCancel={() => setShowDeleteModal(false)}
+                onConfirm={() =>
+                    deleteMutation.mutate(slug!, {
+                        onSuccess: () => {
+                            toast.success('Community deleted successfully');
+                            navigate('/communities');
+                        },
+                    })
+                }
+            />
+        )}
       </div>
     </CommunityContext.Provider>
   );

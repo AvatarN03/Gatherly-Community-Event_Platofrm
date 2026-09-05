@@ -84,7 +84,7 @@ const CommunityHeader = ({
 
       {/* Search + filters row */}
       <div className="flex items-center justify-between flex-wrap gap-3  p-4 max-w-7xl mx-auto">
-        <div className={`${FieldClass.formClass} bg-teal-400 flex-1`}>
+        <div className={`${FieldClass.formClass} bg-slate-100 flex-1`}>
           <Search className="w-4 h-4" />
 
           <input

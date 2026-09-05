@@ -47,6 +47,21 @@
     background-attachment: fixed;
 }
 
+select option {
+    background-color: #f0fdfa;
+    color: #0f766e;
+}
+
+select option:checked {
+    background-color: #ccfbf1;
+    color: #115e59;
+}
+
+::selection {
+  @apply bg-teal-300/50 text-teal-900;
+}
+
+
 @layer components {
 
     .underline-hover {
@@ -69,5 +84,6 @@
         width: 100%;
     }
 
+   
 
 }

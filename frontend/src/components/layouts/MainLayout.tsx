@@ -32,7 +32,7 @@ const MainLayout = () => {
                     />
                 )}
 
-                <div className="flex min-w-0 flex-1 flex-col gap-0">
+                <div className="flex min-w-0 flex-1 flex-col gap-0 border-r border-teal-500">
                     {showDashboard && (
                         <Navbar
                             isSidebarOpen={sidebarOpen}
