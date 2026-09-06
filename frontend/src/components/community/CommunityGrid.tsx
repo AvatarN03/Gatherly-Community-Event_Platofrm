@@ -37,30 +37,10 @@ const CommunityGrid = ({
       />
     );
   return (
-    <div className="relative px-2 md:px-6 pt-6 pb-10 max-w-7xl mx-auto overflow-hidden">
-      {/* Background banner image */}
-      <div
-        className="absolute inset-0 -z-10 bg-no-repeat bg-center bg-contain opacity-70 pointer-events-none"
-        style={{
-          backgroundImage: 'url("/list-banner.svg")',
-        }}
-      />
-
-      {/* Section label */}
-      <div className="flex items-center gap-3 mb-4">
-        <p className="text-slate text-xs uppercase tracking-widest font-medium underline decoration-wavy decoration-teal-600 decoration-2 underline-offset-4">
-          {search ? `Results for "${search}"` : "All Communities"}
-        </p>
-        {!isLoading && communities.length > 0 && (
-          <span className="text-forest text-sm bg-slate-300 border border-teal-800 px-2 py-0.5 rounded-md">
-            {communities.length}
-            {hasNextPage ? "+" : ""} communities
-          </span>
-        )}
-      </div>
+    <div className="mx-auto max-w-[1400px] px-6 pb-8 pt-2 sm:px-10">
 
       {/* Grid — skeletons on initial load, cards otherwise */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8 xl:gap-x-12">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
         {isLoading ? (
           <CommunityCardsSkeleton />
         ) : (
@@ -89,8 +69,8 @@ const CommunityGrid = ({
       <div ref={sentinelRef} className="h-4" />
 
       {!hasNextPage && communities.length > 0 && (
-        <div className="text-center py-6 text-stone text-xs tracking-wide">
-          — you've seen all communities —
+        <div className="py-5 text-xs tracking-wide text-slate-400">
+          Showing {communities.length} communities
         </div>
       )}
     </div>

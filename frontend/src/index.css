@@ -1,74 +1,143 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Sora:wght@100..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
+/* Gatherly design system — light, welcoming, community-first. */
+:root {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --card: #ffffff;
+    --card-foreground: #0f172a;
+    --popover: #ffffff;
+    --popover-foreground: #0f172a;
+    --primary: #0d9488;
+    --primary-foreground: #ffffff;
+    --secondary: #e2e8f0;
+    --secondary-foreground: #1e293b;
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
+    --accent: #ccfbf1;
+    --accent-foreground: #115e59;
+    --destructive: #ef4444;
+    --border: #dbe5ee;
+    --input: #cbd5e1;
+    --ring: #0d9488;
+    --radius: 0.75rem;
+    --gatherly-teal-500: #14b8a6;
+    --gatherly-teal-600: #0d9488;
+    --gatherly-teal-700: #0f766e;
+    --gatherly-emerald-500: #10b981;
+    --gatherly-emerald-600: #059669;
+    --gatherly-navy: #0f172a;
+    --services-background: #0f4f4a;
+    --services-card: #ffffff;
+    --services-text: #ffffff;
+    --services-card-text: #0f172a;
+    --services-card-muted: rgba(15, 23, 42, 0.72);
+    --services-muted: rgba(240, 253, 250, 0.76);
+    --services-border: rgba(255, 255, 255, 0.24);
 }
 
-@theme {
-    --font-sans: "Inter", sans-serif;
-    --font-heading: "Sora", sans-serif;
-
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #081f26;
+        --foreground: #f1f5f9;
+        --card: #0d2d34;
+        --card-foreground: #f1f5f9;
+        --popover: #0d2d34;
+        --popover-foreground: #f1f5f9;
+        --primary: #14b8a6;
+        --primary-foreground: #062b2c;
+        --secondary: #163b43;
+        --secondary-foreground: #d9f7f1;
+        --muted: #12343b;
+        --muted-foreground: #a7c2c7;
+        --accent: #164e4a;
+        --accent-foreground: #ccfbf1;
+        --border: #24515a;
+        --input: #35616a;
+        --ring: #2dd4bf;
+        --gatherly-navy: #f1f5f9;
+        --services-background: #061f25;
+        --services-card: #10353c;
+        --services-text: #f1f5f9;
+        --services-card-text: #f1f5f9;
+        --services-card-muted: rgba(217, 247, 241, 0.74);
+        --services-muted: rgba(217, 247, 241, 0.74);
+        --services-border: rgba(148, 229, 218, 0.24);
+    }
 }
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --radius-sm: calc(var(--radius) * 0.67);
+    --radius-md: calc(var(--radius) * 0.83);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) * 1.33);
+    --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --font-heading: "Inter", ui-sans-serif, system-ui, sans-serif;
+    /* Existing utility names mapped onto the reference palette. */
+    --color-night: var(--gatherly-navy);
+    --color-deep-ocean: #12343b;
+    --color-forest: var(--gatherly-teal-700);
+    --color-mist: #f8fafc;
+    --color-fog: #f8fafc;
+    --color-slate: #e2e8f0;
+    --color-stone: #94a3b8;
+    --color-light-ocean: #ecfeff;
+    --color-cocoa: #115e59;
+    --color-orchid: var(--gatherly-teal-600);
+    --color-lavender: #ccfbf1;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+    font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+    color: var(--foreground);
+    background: var(--background);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    background: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+}
+
+button, input, textarea, select { font: inherit; }
+select option { background: var(--card); color: var(--foreground); }
+select option:checked { background: var(--accent); color: var(--accent-foreground); }
+::selection { background: color-mix(in srgb, var(--gatherly-teal-500) 35%, transparent); color: var(--gatherly-navy); }
 
 @utility bg-dots {
-    background-color: var(--color-night);
-    background-image: /* Primary bloom — bright teal top-left, the main light source */ radial-gradient(
-            ellipse 70% 55% at 8% 8%,
-            rgba(20, 120, 120, 0.58) 0%,
-            rgba(15, 57, 60, 0.32) 45%,
-            transparent 70%
-    ),
-        /* Secondary bloom — softer teal top-right */ radial-gradient(
-            ellipse 50% 40% at 92% 6%,
-            rgba(15, 90, 90, 0.62) 0%,
-            transparent 80%
-    ),
-        /* Faint orchid accent — bottom-right so it doesn't compete */ radial-gradient(
-            ellipse 45% 35% at 88% 92%,
-            rgba(150, 98, 168, 0.34) 0%,
-            transparent 65%
-    ),
-        /* Deep-ocean vignette — keeps center and edges dark & readable */ radial-gradient(
-            ellipse 100% 100% at 50% 50%,
-            transparent 30%,
-            rgba(12, 25, 38, 0.65) 100%
-    ),
-        /* Dot grid — lavender dots at low opacity */ radial-gradient(circle, rgba(174, 181, 249, 0.3) 1px, transparent 1px);
-
-    background-size: 100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    26px 26px;
-
-    background-attachment: fixed;
+    background-color: var(--gatherly-navy);
+    background-image: radial-gradient(circle, rgba(20, 184, 166, 0.22) 1px, transparent 1px);
+    background-size: 26px 26px;
 }
-
-select option {
-    background-color: #f0fdfa;
-    color: #0f766e;
-}
-
-select option:checked {
-    background-color: #ccfbf1;
-    color: #115e59;
-}
-
-::selection {
-  @apply bg-teal-300/50 text-teal-900;
-}
-
 
 @layer components {
-
-    .underline-hover {
-        position: relative;
-        display: inline-block;
-    }
-
+    .underline-hover { position: relative; display: inline-block; }
     .underline-hover::after {
         content: "";
         position: absolute;
@@ -76,14 +145,48 @@ select option:checked {
         bottom: 0;
         height: 2px;
         width: 0;
-        background-color: #0f766e;
-        transition: width 0.3s ease;
+        background-color: var(--gatherly-teal-700);
+        transition: width 0.2s ease;
     }
+    .underline-hover:hover::after { width: 100%; }
 
-    .underline-hover:hover::after {
-        width: 100%;
+    .navbar-link { position: relative; }
+    .navbar-link::after {
+        content: "";
+        position: absolute;
+        bottom: 0.35rem;
+        left: 1rem;
+        right: 1rem;
+        height: 1px;
+        transform: scaleX(0);
+        transform-origin: center;
+        background: var(--primary);
+        transition: transform 0.2s ease;
     }
+    .navbar-link:hover::after { transform: scaleX(1); }
 
-   
+    .service-card-image {
+        opacity: 0;
+        transition: opacity 0.45s ease, transform 0.6s ease;
+    }
+    .service-card:hover .service-card-image {
+        opacity: 0.34;
+        transform: scale(1.04);
+    }
+    .service-card-scrim {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.56), rgba(255, 255, 255, 0.22));
+        opacity: 0;
+        transition: opacity 0.35s ease;
+    }
+    .service-card:hover .service-card-scrim { opacity: 1; }
+}
 
+@media (prefers-color-scheme: dark) {
+    a, button { cursor: pointer; }
+    .navbar-link { color: var(--foreground); }
+    .navbar-link:hover { color: var(--primary); }
+    .service-card:hover .service-card-image { opacity: 0.44; }
+    .service-card-scrim {
+        background: linear-gradient(135deg, rgba(6, 31, 37, 0.68), rgba(16, 53, 60, 0.42));
+    }
 }

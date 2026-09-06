@@ -1,97 +1,111 @@
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 
-import {CalendarPlus, Compass, Users} from 'lucide-react'
+import { CalendarPlus, Compass, Users } from "lucide-react";
 
 export const Footer = () => {
-    return (
-        <footer className="bg-orchid  border-t-2 border-lavender px-12 py-6 pt-20  rounded-t-sm">
+  return (
+    <footer className="border-t border-border bg-background px-6 py-12 md:px-12">
 
-            {/* Top grid */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+      {/* Top grid */}
+      <div className="mx-auto grid max-w-350 grid-cols-1 gap-10 md:grid-cols-4">
 
-                {/* Brand */}
-                <div className="flex flex-col gap-4 col-span-1 md:col-span-2">
-                    <Link to="/">
-                        <div
-                            className="text-2xl font-semibold tracking-wider text-lavender flex items-center gap-1 group">
-                            <img
-                                src="/logo.png"
-                                alt="Logo"
-                                className="w-14 h-14 group-hover:scale-110 transition-transform group-hover:rotate-90 duration-300"
-                            />
-                            <h3 className={"text-mist"}>
-                                G
-                                <span className="text-fog group-hover:text-lavender underline-hover transition-colors">
-                                    atherly
-                                </span>
-                            </h3>
-                        </div>
-                    </Link>
-                    <p className="text-base text-fog/60 leading-relaxed">
-                        The home for communities that actually show up. Build, grow, and gather — all in one place.
-                    </p>
-                    <div className="flex gap-2">
-                        <Link to="https://github.com/AvatarN03/Gatherly" target="_blank" rel="noopener noreferrer"
-                              className="rounded-lg border border-white/10 flex items-center justify-center
-                text-fog/50 px-2 hover:text-lavender hover:bg-white/5 transition-colors cursor-pointer">
-                            <img
-                                src="/github.png"
-                                alt="github"
-                                className="w-8 h-8"
-                            />
-                            GitHub
-                        </Link>
-                    </div>
-                </div>
-
-                {/* Product */}
-                <div className="space-y-15 ">
-                    <p className="text-sm font-medium text-fog/60 tracking-widest uppercase mb-4">Product</p>
-                    <div className="flex flex-col gap-3">
-                        {[
-                            {label: "Explore events", to: "/events", icon: <Compass size={13}/>},
-                            {label: "Communities", to: "/communities", icon: <Users size={13}/>},
-                            {label: "Host an event", to: "/events/create", icon: <CalendarPlus size={13}/>}
-                        ].map(({label, to, icon}) => (
-                            <Link key={label} to={to}
-                                  className="text-sm text-fog/70 hover:text-lavender flex items-center gap-1.5 transition-colors w-fit">
-                                {icon}{label}
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Company */}
-                <div className="flex flex-col gap-2.5">
-                    <p className="text-base font-medium text-fog tracking-widest uppercase mb-1">Company</p>
-
-                    <Link to="/about"
-                          className="text-sm text-fog/70 hover:text-lavender transition-colors cursor-pointer w-fit">
-                        About us
-                    </Link>
-                    <Link to="/contact"
-                          className="text-sm text-fog/70 hover:text-lavender transition-colors cursor-pointer w-fit">
-                        Contact us
-                    </Link>
-                </div>
-
-
+        {/* Brand */}
+        <div className="flex flex-col gap-4 col-span-1 md:col-span-2">
+          <Link to="/">
+            <div className="flex items-center gap-2 group">
+              <img
+                src="/logo2.svg"
+                alt="Gatherly logo"
+                className="h-10 w-10 transition-transform duration-200 group-hover:scale-[1.06]"
+              />
+              <h3 className="text-xl font-semibold tracking-tight text-foreground">
+                Gatherly
+              </h3>
             </div>
+          </Link>
+          <p className="max-w-sm text-base leading-relaxed text-muted-foreground">
+            The home for communities that actually show up. Build, grow, and
+            gather — all in one place.
+          </p>
+          <div className="flex gap-3">
+            <Link
+              to="https://github.com/AvatarN03/Gatherly"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-md border border-border bg-card px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-primary hover:bg-accent hover:text-accent-foreground"
+            >
+              <img src="/github.png" alt="github" className="h-5 w-5" />
+              GitHub
+            </Link>
+          </div>
+        </div>
 
-            {/* Bottom bar */}
-            <div className="flex items-center justify-between border-t border-white/10 pt-5 mt-2">
-                <p className="text-xs text-cocoa/60">© 2026 <span className="text-cocoa">Gatherly</span>. All rights
-                    reserved.</p>
-                <div className="hidden md:flex items-center gap-4">
-                    {["Privacy", "Terms", "Cookies"].map(label => (
-                        <a key={label}
-                           className="text-xs text-fog/40 hover:text-fog/70 transition-colors cursor-pointer">
-                            {label}
-                        </a>
-                    ))}
-                </div>
-            </div>
+        {/* Product */}
+        <div className="space-y-4">
+          <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+            Product
+          </p>
+          <div className="flex flex-col gap-3">
+            {[
+              { label: "Explore events", to: "/events", icon: <Compass size={14} /> },
+              { label: "Communities", to: "/communities", icon: <Users size={14} /> },
+              {
+                label: "Host an event",
+                to: "/events/create",
+                icon: <CalendarPlus size={14} />,
+              },
+            ].map(({ label, to, icon }) => (
+              <Link
+                key={label}
+                to={to}
+                className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-primary"
+              >
+                {icon}
+                {label}
+              </Link>
+            ))}
+          </div>
+        </div>
 
-        </footer>
-    )
-}
+        {/* Company */}
+        <div className="space-y-4">
+          <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+            Company
+          </p>
+          <div className="flex flex-col gap-3">
+            <Link
+              to="/about"
+              className="inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-primary"
+            >
+              About us
+            </Link>
+            <Link
+              to="/contact"
+              className="inline-flex items-center text-sm text-muted-foreground transition-colors hover:text-primary"
+            >
+              Contact us
+            </Link>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom bar */}
+      <div className="mx-auto mt-12 flex max-w-[1400px] flex-col items-center justify-between gap-4 border-t border-border pt-6 md:flex-row">
+        <p className="text-xs text-muted-foreground">
+          © 2026 Gatherly. All rights reserved.
+        </p>
+        <div className="flex items-center gap-6">
+          {["Privacy", "Terms", "Cookies"].map((label) => (
+            <a
+              key={label}
+              href="#"
+              className="text-xs text-muted-foreground transition-colors hover:text-primary"
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+      </div>
+    </footer>
+  );
+};

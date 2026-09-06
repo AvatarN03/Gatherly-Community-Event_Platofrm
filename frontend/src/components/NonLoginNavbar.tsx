@@ -1,231 +1,149 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { CalendarDays, Users, LogIn, SquarePen } from "lucide-react";
-import { MorphIcon } from "morphicons/react";
-import { Menu as MenuIcon, X as XIcon } from "lucide";
+import { ArrowRight, CalendarDays, LogIn, Menu, SquarePen, Users, X } from "lucide-react";
 import { SignInButton, SignUpButton, useAuth, UserButton, useUser } from "@clerk/react";
+
+const navLinkClass =
+  "navbar-link inline-flex cursor-pointer items-center gap-2 px-4 py-2.5 text-sm font-normal text-foreground transition-colors hover:text-primary";
 
 export const NonLoginNavbar = () => {
   const { isSignedIn, isLoaded } = useAuth();
   const { user } = useUser();
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLElement>(null);
 
-  // Close on outside click
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef?.current?.contains(e.target as Node)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
     };
 
-    if (isMenuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
+    if (isMenuOpen) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMenuOpen]);
 
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <header
-      className={`min-h-18 w-full flex items-center bg-teal-50/50 backdrop-blur-xs border-b border-slate-500 shadow-md sticky top-0 z-50  transition-all duration-300`}
-    >
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background shadow-[0_1px_10px_rgba(15,23,42,0.06)]">
       <nav
         ref={menuRef}
-        className="flex items-center justify-between max-w-400 mx-auto w-full px-3 gap-4"
+        aria-label="Primary navigation"
+        className="relative mx-auto flex min-h-16 w-full max-w-420 items-center gap-6 px-5 sm:px-7"
       >
-        <div className="flex items-center gap-4 shrink-0">
+        <Link
+          to="/"
+          onClick={closeMenu}
+          className="group flex shrink-0 items-center rounded-md gap-2 py-2 pr-2"
+          aria-label="Gatherly home"
+        >
+          <img
+            src="/logo2.svg"
+            alt="Gatherly logo"
+            className="h-9 w-9 transition-transform duration-200 group-hover:scale-[1.04]"
+          />
+          <h2 className="text-lg font-semibold tracking-[-0.03em] text-foreground transition-colors group-hover:text-primary sm:text-xl">
+            Gatherly
+          </h2>
+        </Link>
 
-          {/* Logo */}
-          <Link to="/" onClick={closeMenu}>
-            <div className="text-xl font-semibold tracking-wider flex items-center gap-1 group">
-              <img
-                src="/logo2.svg"
-                alt="Logo"
-                className="w-8 h-8 group-hover:scale-110 group-hover:rotate-90 transition-transform duration-300"
-              />
-          
-              <h3 className="text-black text-lg font-semibold tracking-wider">
-                G
-                <span
-                  className="
-                    relative inline-block
-                    text-slate-700
-                    group-hover:text-black
-                    transition-colors
-                    after:content-['']
-                    after:absolute
-                    after:left-0
-                    after:bottom-0
-                    after:h-[2.5px]
-                    after:w-0
-                    after:bg-teal-700
-                    after:transition-all
-                    after:duration-300
-                    group-hover:after:w-full
-                  "
-                >
-                  atherly
-                </span>
-              </h3>
-            </div>
+        <div className="hidden items-center gap-2 md:flex">
+          <Link to="/communities" className={navLinkClass}>
+            <Users className="h-4 w-4 text-teal-600" />
+            Communities
+          </Link>
+          <Link to="/events" className={navLinkClass}>
+            <CalendarDays className="h-4 w-4 text-teal-600" />
+            Events
           </Link>
         </div>
 
-        <div className="hidden md:flex flex-1 justify-center">
-          <ul className="space-x-4 flex ">
-            <Link
-              to="/communities"
-              className="flex items-center transition-colors underline-hover hover:bg-slate-50 p-2 rounded-md"
-            >
-              <Users className="w-4 h-4 inline-block mr-1" />
-              Communities
-            </Link>
-            <Link
-              to="/events"
-              className="group flex items-center transition-colors underline-hover hover:bg-slate-50 p-2 rounded-md"
-            >
-              <CalendarDays className="w-4 h-4 inline-block mr-1" />
-              Events
-            </Link>
-          </ul>
+        <div className="ml-auto hidden items-center gap-2 md:flex text-xs" >
+          {!isLoaded ? (
+            <div className="h-9 w-28 animate-pulse rounded-md bg-slate-100" aria-label="Loading" />
+          ) : !isSignedIn ? (
+            <>
+              <SignInButton mode="modal">
+                <button className="inline-flex cursor-pointer items-center gap-2 rounded-md px-4 py-2.5  font-normal text-foreground transition-colors hover:text-primary">
+                  <LogIn className="h-4 w-4" />
+                  Sign In
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button className="inline-flex items-center gap-2 rounded-xs bg-teal-600 px-3.5 py-2  font-semibold text-white shadow-sm shadow-teal-600/20 transition-colors hover:bg-teal-700">
+                  <SquarePen className="h-4 w-4" />
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/dashboard"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-md bg-primary px-3.5 py-2 text-sm font-semibold text-primary-foreground shadow-sm shadow-teal-700/20 transition-colors hover:bg-teal-700 hover:shadow-md hover:shadow-teal-700/20"
+              >
+                Dashboard
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <div className="ml-1 border-l border-slate-200 pl-3">
+                <UserButton appearance={{ elements: { avatarBox: "h-9 w-9" } }} />
+              </div>
+            </>
+          )}
         </div>
 
-        <div className="flex items-center justify-end gap-2 md:gap-4 shrink-0">
-          {/* Desktop links */}
-          <div className="min-w-24 hidden md:flex items-center justify-center gap-3">
-            {isLoaded ? (
-              !isSignedIn ? (
-                <div className="flex items-center gap-2">
-                <SignInButton mode="modal">
-                  <button className="px-3 py-1.5 rounded-md flex items-center gap-2 text-sm cursor-pointer border border-emerald-600/60 bg-emerald-50 text-emerald-800 hover:bg-emerald-100 hover:text-emerald-950 transition-colors shadow-sm">
-                    <LogIn className="w-4 h-4" />
-                    Sign In
-                  </button>
-                  </SignInButton>
-
-                <SignUpButton mode="modal">
-                  <button className="px-3 py-1.5 rounded-md flex items-center gap-2 text-sm cursor-pointer bg-emerald-500 text-white hover:bg-emerald-600 transition-colors shadow-md shadow-emerald-200">
-                    <SquarePen className="w-4 h-4" />
-                    Sign Up
-                  </button>
-                  </SignUpButton>
-
-
-
-                </div>
-              ) : (
-                <>
-                  <Link
-                    to="/dashboard"
-                    className="px-2 py-1.5 text-sm shadow-lg border border-slate-800 bg-teal-400 hover:bg-orchid/10 transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                  <div className="hidden md:block">
-                    <UserButton />
-                  </div>
-                </>
-              )
-            ) : (
-              <div className="w-36 h-8 rounded-sm bg-slate-300 animate-pulse" />
-            )}
-          </div>
-
-          {/* Hamburger button */}
-          <button
-            className="block w-8 h-8 md:hidden"
-            onClick={() => setIsMenuOpen((prev) => !prev)}
-          >
-            <MorphIcon
-              icon={isMenuOpen ? XIcon : MenuIcon}
-              className="w-5 h-5 text-slate-800"
-            />
-          </button>
-        </div>
-
-        {/* Mobile menu */}
-        <div
-          className={`md:hidden absolute top-full left-0 w-full grid transition-[grid-template-rows] duration-300 ease-in-out ${isMenuOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-            }`}
+        <button
+          type="button"
+          aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={isMenuOpen}
+          onClick={() => setIsMenuOpen((open) => !open)}
+          className="ml-auto inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-md text-foreground transition-colors hover:text-primary md:hidden"
         >
-          {/* This wrapper is what actually clips the height, so the animation
-              always matches the real content size instead of an arbitrary max-h value */}
-          <div className="overflow-hidden">
-            <div
-              className={`flex flex-col items-center gap-2 px-4 p-4 w-full bg-teal-50 border border-teal-200 border-t-0 rounded-b-2xl transition-[opacity,transform] duration-300 ease-in-out ${isMenuOpen
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 -translate-y-2 pointer-events-none"
-                }`}
-            >
-              <div className="flex flex-col items-center w-full divide-y divide-teal-200 gap-1">
-                <Link
-                  to="/communities"
-                  onClick={closeMenu}  // ← closes menu
-                  className="flex items-center gap-4 text-teal-800 text-base py-3 w-full transition-colors duration-200 hover:text-teal-600"
-                >
-                  <Users className="w-5 h-5" />
-                  Communities
-                </Link>
+          {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
 
-                <Link
-                  to="/events"
-                  onClick={closeMenu}  // ← closes menu
-                  className="flex items-center gap-4 text-teal-800 text-base py-3 w-full transition-colors duration-200 hover:text-teal-600"
-                >
-                  <CalendarDays className="w-5 h-5" />
-                  Events
-                </Link>
+        <div
+          className={`absolute left-0 top-full w-full overflow-hidden border-b border-border bg-background shadow-lg transition-[grid-template-rows,opacity] duration-200 md:hidden ${
+            isMenuOpen ? "grid grid-rows-[1fr] opacity-100" : "grid grid-rows-[0fr] opacity-0"
+          }`}
+        >
+          <div className="min-h-0">
+            <div className="flex flex-col gap-1 bg-background p-4">
+              <Link to="/communities" onClick={closeMenu} className={navLinkClass}>
+                <Users className="h-4 w-4 text-teal-600" /> Communities
+              </Link>
+              <Link to="/events" onClick={closeMenu} className={navLinkClass}>
+                <CalendarDays className="h-4 w-4 text-teal-600" /> Events
+              </Link>
+              <Link to="/about" onClick={closeMenu} className={navLinkClass}>About</Link>
+              <Link to="/contact" onClick={closeMenu} className={navLinkClass}>Contact</Link>
 
-                <Link
-                  to="/about"
-                  onClick={closeMenu}
-                  className="flex items-center gap-4 text-teal-800 text-base py-3 w-full transition-colors duration-200 hover:text-teal-600"
-                >
-                  About
-                </Link>
-
-                <Link
-                  to="/contact"
-                  onClick={closeMenu}
-                  className="flex items-center gap-4 text-teal-800 text-base py-3 w-full transition-colors duration-200 hover:text-teal-600"
-                >
-                  Contact
-                </Link>
-
-                {isLoaded ? (
-                  !isSignedIn ? (
-                    <div className="flex items-center gap-3 w-full pt-4">
-                      <SignInButton mode="modal">
-                        <button className="flex-1 flex items-center justify-center gap-2 rounded-lg border border-teal-500 py-2.5 px-3 text-sm cursor-pointer  transition-all duration-200 hover:bg-teal-100">
-                          <LogIn className="w-4 h-4" /> Sign In
-                        </button>
-                      </SignInButton>
-
-                      <SignUpButton mode="modal">
-                        <button className="flex-1 flex items-center justify-center gap-2 rounded-lg bg-teal-500 py-2.5 px-3 text-sm cursor-pointer transition-all duration-200 hover:bg-teal-400">
-                          <SquarePen className="w-4 h-4" />
-                          Sign Up
-                        </button>
-                      </SignUpButton>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-3 py-4" onClick={closeMenu}>
-                      <UserButton />
-                      <span className="text-teal-800 text-sm">{user?.firstName || "Profile"}</span>
-                    </div>
-                  )
+              <div className="mt-2 flex items-center gap-2 border-t border-slate-100 pt-3">
+                {!isLoaded ? (
+                  <div className="h-9 w-full animate-pulse rounded-md bg-slate-100" />
+                ) : !isSignedIn ? (
+                  <>
+                    <SignInButton mode="modal">
+                      <button className="flex-1 cursor-pointer rounded-md border border-primary px-3 py-2 text-sm font-normal text-primary hover:bg-accent">Sign In</button>
+                    </SignInButton>
+                    <SignUpButton mode="modal">
+                      <button className="flex-1 cursor-pointer rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-teal-700">Sign Up</button>
+                    </SignUpButton>
+                  </>
                 ) : (
-                  <div className="w-36 h-8 rounded-sm bg-teal-200 animate-pulse" />
+                  <div className="flex w-full items-center justify-between">
+                    <Link to="/dashboard" onClick={closeMenu} className="text-sm font-semibold text-teal-700">Dashboard</Link>
+                    <div className="flex items-center gap-2 text-sm text-slate-600">
+                      <span>{user?.firstName || "Profile"}</span>
+                      <UserButton appearance={{ elements: { avatarBox: "h-9 w-9" } }} />
+                    </div>
+                  </div>
                 )}
               </div>
             </div>
           </div>
         </div>
-
       </nav>
     </header>
   );

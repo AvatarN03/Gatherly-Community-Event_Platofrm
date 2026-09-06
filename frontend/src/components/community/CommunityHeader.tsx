@@ -1,34 +1,20 @@
-import { useRef } from "react";
-import { ArrowUpDown, Search, Tag, X } from "lucide-react";
-import {
-  COMMUNITY_CATEGORIES,
-  FieldClass,
-  SORT_OPTIONS,
-} from "../../constant.ts";
+import { Grid2X2, Search, X } from "lucide-react";
+import { COMMUNITY_CATEGORIES, SORT_OPTIONS } from "../../constant.ts";
 import type { CommunityCategory } from "../../types/community.ts";
 import type { SortBy } from "../../types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
-type SelectWithPicker = HTMLSelectElement & { showPicker?: () => void };
-
-const openSelect = (ref: React.RefObject<SelectWithPicker | null>) => {
-  const el = ref.current;
-  if (!el) return;
-
-  if (typeof el.showPicker === "function") {
-    try {
-      el.showPicker();
-      return;
-    } catch {
-      // fall through to click fallback
-    }
-  }
-
-  el.focus();
-  el.click();
-};
+export type CommunityTab = "all" | "my" | "managed" | "joined";
 
 type CommunityHeaderProps = {
   title: string;
+  eyebrow?: string;
   description?: string;
   search: string;
   onChange: (value: string) => void;
@@ -38,9 +24,37 @@ type CommunityHeaderProps = {
   onSortByChange: (value: SortBy) => void;
 };
 
+const FilterSelect = ({
+  value,
+  onValueChange,
+  placeholder,
+  options,
+  ariaLabel,
+}: {
+  value: string;
+  onValueChange: (value: string) => void;
+  placeholder?: string;
+  options: { value: string; label: string }[];
+  ariaLabel: string;
+}) => (
+  <Select value={value} onValueChange={onValueChange}>
+    <SelectTrigger aria-label={ariaLabel}>
+      <SelectValue placeholder={placeholder} />
+    </SelectTrigger>
+    <SelectContent>
+      {options.map((option) => (
+        <SelectItem key={option.value} value={option.value}>
+          {option.label}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
+);
+
 const CommunityHeader = ({
   title,
-  description = "Discover and join communities that share your interests, passions, and goals.",
+  eyebrow = "EXPLORE & CONNECT",
+  description = "Discover like-minded people, join communities, and be part of something bigger.",
   search,
   onChange,
   category,
@@ -48,105 +62,106 @@ const CommunityHeader = ({
   sortBy,
   onSortByChange,
 }: CommunityHeaderProps) => {
-  const categoryRef = useRef<SelectWithPicker>(null);
-  const sortByRef = useRef<SelectWithPicker>(null);
-
+  const browseCategories = [
+    { value: "", label: "All" },
+    ...COMMUNITY_CATEGORIES.slice(0, 7),
+    { value: "__more", label: "More" },
+  ];
   return (
-    <div>
-      {/* Banner */}
-      <div className="relative h-56 md:h-64 flex items-center overflow-hidden">
-        {/* Background image */}
-        <div
-          className="absolute inset-0 bg-cover bg-center "
-          style={{
-            backgroundImage: 'url("/banner-img.svg")',
-          }}
+    <div className="bg-background">
+      <div className="relative isolate min-h-[250px] overflow-hidden border-b border-border bg-accent/30 px-6 py-10 sm:px-10 lg:px-14">
+        <div className="absolute -right-8 -top-36 h-[440px] w-[600px] rounded-full bg-primary/10 blur-3xl" />
+        <img
+          src="https://images.unsplash.com/photo-1768776183581-22b35cae3e6e?auto=format&fit=crop&w=1400&q=80"
+          alt="People gathering outdoors"
+          className="absolute inset-y-0 right-0 h-full w-full object-cover opacity-50 dark:opacity-50"
         />
-
-        {/* Greenish shade overlay */}
-        <div className="absolute inset-0 bg-emerald-900/50" />
-
-        {/* Banner content */}
-        <div className="relative z-10 flex items-center justify-between w-full px-6 md:px-10">
-          <div className="font-heading  text-left space-y-2">
-            <h1 className="text-3xl lg:text-5xl font-semibold tracking-widest text-white">
-              {title}
-            </h1>
-            <p className="text-sm md:text-base text-teal-100 max-w-xl">
-              {description}
-            </p>
-          </div>
-
-          {/* Reserved space for future images/PNGs */}
-          <div className="hidden md:block" />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-background/5" />
+        <div className="relative z-10 max-w-xl">
+          <p className="mb-2 text-[11px] font-semibold tracking-[0.16em] text-primary">
+            {eyebrow}
+          </p>
+          <h1 className="text-4xl font-semibold tracking-[-0.04em] text-foreground sm:text-5xl">
+            {title}
+          </h1>
+          <p className="mt-3 max-w-md text-sm leading-6 text-muted-foreground">
+            {description}
+          </p>
         </div>
       </div>
-
-      {/* Search + filters row */}
-      <div className="flex items-center justify-between flex-wrap gap-3  p-4 max-w-7xl mx-auto">
-        <div className={`${FieldClass.formClass} bg-slate-100 flex-1`}>
-          <Search className="w-4 h-4" />
-
-          <input
-            type="text"
-            placeholder="Search communities..."
-            value={search}
-            onChange={(e) => onChange(e.target.value)}
-            className={`${FieldClass.inputClass} text-xl`}
-          />
-          {search && (
-            <button
-              type="button"
-              className="p-1 rounded-md bg-teal-100"
-              onClick={() => onChange("")}
-            >
-              <X className="w-4 h-4 text-cyan-700" />
-            </button>
-          )}
-        </div>
-
-        <div className="flex items-center gap-1 flex-wrap ml-auto">
-          <div className={FieldClass.filterClass}>
-            <Tag
-              className="w-6 h-6 text-teal-900 cursor-pointer"
-              onClick={() => openSelect(categoryRef)}
+      <div className="mx-auto max-w-[1400px] px-6 pb-5 pt-4 sm:px-10">
+        <div className="flex flex-col gap-3 lg:flex-row">
+          <div className="flex h-10 flex-1 items-center gap-2 rounded-md border border-border bg-card px-3 text-card-foreground shadow-sm focus-within:ring-2 focus-within:ring-ring">
+            <Search className="h-4 w-4 text-primary" />
+            <input
+              type="text"
+              placeholder="Search communities, topics, or people..."
+              value={search}
+              onChange={(e) => onChange(e.target.value)}
+              className="w-full min-w-0 appearance-none bg-transparent text-xs text-card-foreground outline-none placeholder:text-muted-foreground"
             />
-            <select
-              ref={categoryRef}
-              name="category"
-              value={category}
-              onChange={(e) =>
-                onCategoryChange(e.target.value as CommunityCategory | "")
-              }
-              className={`${FieldClass.selectClass}`}
-            >
-              <option value="">All</option>
-
-              {COMMUNITY_CATEGORIES.map(({ value, label }) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
+            {search && (
+              <button
+                type="button"
+                className="cursor-pointer rounded-md p-1 text-primary hover:bg-accent"
+                onClick={() => onChange("")}
+              >
+                <X className="h-4 w-4" />
+              </button>
+            )}
           </div>
-
-          <div className={FieldClass.filterClass}>
-            <ArrowUpDown
-              className="w-6 h-6 text-teal-900 cursor-pointer"
-              onClick={() => openSelect(sortByRef)}
-            />
-            <select
-              ref={sortByRef}
-              value={sortBy}
-              onChange={(e) => onSortByChange(e.target.value as SortBy)}
-              className={FieldClass.selectClass}
-            >
-              {SORT_OPTIONS.map((s) => (
-                <option key={s.value} value={s.value}>
-                  {s.label}
-                </option>
-              ))}
-            </select>
+          <div className="flex gap-2">
+            <div className="flex min-w-36 flex-1 items-center gap-2">
+              <Grid2X2 className="h-4 w-4 shrink-0 text-primary" />
+              <div className="min-w-0 flex-1">
+                <FilterSelect
+                  ariaLabel="Filter communities by category"
+                  value={category}
+                  onValueChange={(value) =>
+                    onCategoryChange(value as CommunityCategory | "")
+                  }
+                  placeholder="Categories"
+                  options={[
+                    { value: "", label: "Categories" },
+                    ...COMMUNITY_CATEGORIES,
+                  ]}
+                />
+              </div>
+            </div>
+            <div className="flex min-w-32 flex-1 items-center gap-2">
+              <span className="text-[10px] text-muted-foreground">Sort by</span>
+              <div className="min-w-0 flex-1">
+                <FilterSelect
+                  ariaLabel="Sort communities"
+                  value={sortBy}
+                  onValueChange={(value) => onSortByChange(value as SortBy)}
+                  options={SORT_OPTIONS.map((option) => ({
+                    value: option.value,
+                    label: option.label,
+                  }))}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="mt-5">
+          <p className="mb-2 text-xs font-semibold text-foreground">
+            Browse by Category
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {browseCategories.map((item) => (
+              <button
+                key={item.value}
+                type="button"
+                onClick={() =>
+                  item.value !== "__more" &&
+                  onCategoryChange(item.value as CommunityCategory | "")
+                }
+                className={`cursor-pointer rounded-full border px-3 py-1.5 text-[10px] font-medium transition ${category === item.value || (item.value === "" && !category) ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-muted-foreground hover:border-primary hover:text-primary"}`}
+              >
+                {item.label}
+              </button>
+            ))}
           </div>
         </div>
       </div>
