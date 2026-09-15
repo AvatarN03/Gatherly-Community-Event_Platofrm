@@ -248,10 +248,10 @@ export const COMMUNITY_CATEGORIES = [
 export const SKELETON_COUNT = 9;
 
 export const FieldClass = {
-    formClass: "group flex items-center gap-2 w-full px-2 py-1 bg-teal-300/30 border-teal-600 rounded-sm shadow-xs  text-teal-900 focus:outline-none focus-within:border-teal-900 transition-colors cursor-pointer",
-    inputClass: "w-full p-2 bg-transparent border-transparent outline-none   placeholder-500 text-xs md:text-sm",
-    selectClass: "w-full appearance-none  bg-transparent px-2 py-0.5 text-sm text-teal-900  outline-none  ",
-    filterClass: "flex items-center  p-1 bg-teal-300 border border-teal-600/50 rounded-md text-xs md:text-sm cursor-pointer"
+    formClass: "group flex items-center gap-2 w-full px-3 py-2 bg-muted/50 border border-border rounded-md text-foreground focus-within:ring-2 focus-within:ring-ring transition-colors",
+    inputClass: "w-full p-1.5 bg-transparent outline-none placeholder:text-muted-foreground text-sm",
+    selectClass: "w-full appearance-none bg-transparent px-1.5 py-0.5 text-sm text-foreground outline-none cursor-pointer",
+    filterClass: "flex items-center p-1 bg-accent border border-border rounded-md text-xs md:text-sm cursor-pointer"
 }
 
 

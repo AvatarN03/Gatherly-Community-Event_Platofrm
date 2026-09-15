@@ -138,6 +138,8 @@ model Community {
   latitude    Float
   longitude   Float
   tags        String[]
+  isPrivate       Boolean @default(false)
+  requireApproval Boolean @default(true)
 
   createdById String
   createdBy   User   @relation("UserCommunities", fields: [createdById], references: [id])

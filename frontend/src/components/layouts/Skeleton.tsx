@@ -1,12 +1,29 @@
 import { SKELETON_COUNT } from "../../constant.ts";
 
 export const CardSkeleton = () => (
-  <div className=" rounded-md  overflow-hidden animate-pulse p-3">
-    <div className="w-full h-48 bg-teal-200 rounded-md" />
-    <div className="mt-2 space-y-2">
-      <div className="h-6 bg-teal-200 rounded" />
-      <div className="h-4 bg-teal-200 rounded w-4/5" />
-      <div className="h-6  bg-teal-200 rounded " />
+  <div className="overflow-hidden rounded-xl border border-border bg-card animate-pulse">
+    {/* Image placeholder */}
+    <div className="relative h-44 w-full bg-muted">
+      {/* Category badge placeholder */}
+      <div className="absolute bottom-2.5 left-2.5 h-5 w-16 rounded-full bg-muted-foreground/20" />
+      {/* Icon placeholder */}
+      <div className="absolute bottom-2.5 right-2.5 h-7 w-7 rounded-full bg-muted-foreground/20" />
+    </div>
+    {/* Content placeholder */}
+    <div className="px-4 pb-4 pt-3 space-y-2.5">
+      <div className="h-4 w-3/5 rounded bg-muted" />
+      <div className="space-y-1.5">
+        <div className="h-3 w-full rounded bg-muted" />
+        <div className="h-3 w-4/5 rounded bg-muted" />
+        <div className="h-3 w-3/5 rounded bg-muted" />
+      </div>
+      <div className="flex items-center justify-between pt-2">
+        <div className="flex gap-3">
+          <div className="h-3 w-14 rounded bg-muted" />
+          <div className="h-3 w-12 rounded bg-muted" />
+        </div>
+        <div className="h-6 w-12 rounded-md bg-muted" />
+      </div>
     </div>
   </div>
 );

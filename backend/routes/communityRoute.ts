@@ -44,15 +44,12 @@ communityRoute.delete(
 
 communityRoute.put(
   "/:slug",
-  (req, res, next) => {
-    console.log("Update community route", req.params.slug);
-    next();
-  },
   requiredUser,
   UpdateCommunityLimiter,
   upload.single("updateCommunityImage"),
-  uploadToImageKit("communities"),
   validate(updateCommunitySchema),
+  resizeImageIfNeeded,
+  uploadToImageKit("communities"),
   updateCommunity,
 );
 

@@ -20,7 +20,7 @@ export const createCommunity = async (
   res: Response,
 ) => {
   try {
-    const { name, description, location, latitude, longitude, category, tags } = req.body;
+    const { name, description, location, latitude, longitude, category, tags, isPrivate, requireApproval } = req.body;
 
     const user = req.user!;
 
@@ -65,6 +65,8 @@ export const createCommunity = async (
           latitude,
           longitude,
           tags: tags ?? [],
+          isPrivate,
+          requireApproval,
           createdById: user.id,
           members: {
             create: {
@@ -101,9 +103,8 @@ export const createCommunity = async (
       community,
     });
   } catch (error: unknown) {
-    console.error("CREATE COMMUNITY ERROR:", error);
-    // @ts-ignore
-    res.status(500).json({ error: error?.message ?? "Something went wrong" });
+    const message = error instanceof Error ? error.message : "Something went wrong";
+    res.status(500).json({ error: message });
   }
 };
 
@@ -302,7 +303,7 @@ export const updateCommunity = async (req: Request, res: Response) => {
   const { slug } = req.params as { slug: string };
 
   try {
-    const { name, description, location, latitude, longitude, category, tags } = req.body;
+    const { name, description, location, latitude, longitude, category, tags, isPrivate, requireApproval } = req.body;
 
     const user = req.user!;
 
@@ -326,6 +327,8 @@ export const updateCommunity = async (req: Request, res: Response) => {
           latitude,
           longitude,
           tags: tags ?? [],
+          isPrivate,
+          requireApproval,
           ...(req.imageUrl && {
             imageUrl: req.imageUrl,
             imageFileId: req.imageFileId,

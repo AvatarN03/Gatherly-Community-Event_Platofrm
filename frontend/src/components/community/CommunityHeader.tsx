@@ -1,4 +1,4 @@
-import { Grid2X2, Search, X } from "lucide-react";
+import { ArrowUpDown, Grid2X2, Search, X } from "lucide-react";
 import { COMMUNITY_CATEGORIES, SORT_OPTIONS } from "../../constant.ts";
 import type { CommunityCategory } from "../../types/community.ts";
 import type { SortBy } from "../../types";
@@ -62,11 +62,6 @@ const CommunityHeader = ({
   sortBy,
   onSortByChange,
 }: CommunityHeaderProps) => {
-  const browseCategories = [
-    { value: "", label: "All" },
-    ...COMMUNITY_CATEGORIES.slice(0, 7),
-    { value: "__more", label: "More" },
-  ];
   return (
     <div className="bg-background">
       <div className="relative isolate min-h-[250px] overflow-hidden border-b border-border bg-accent/30 px-6 py-10 sm:px-10 lg:px-14">
@@ -90,7 +85,8 @@ const CommunityHeader = ({
         </div>
       </div>
       <div className="mx-auto max-w-[1400px] px-6 pb-5 pt-4 sm:px-10">
-        <div className="flex flex-col gap-3 lg:flex-row">
+        <div className="flex flex-col gap-3 lg:flex-row lg:items-center">
+          {/* Search bar */}
           <div className="flex h-10 flex-1 items-center gap-2 rounded-md border border-border bg-card px-3 text-card-foreground shadow-sm focus-within:ring-2 focus-within:ring-ring">
             <Search className="h-4 w-4 text-primary" />
             <input
@@ -110,7 +106,10 @@ const CommunityHeader = ({
               </button>
             )}
           </div>
+
+          {/* Filter controls */}
           <div className="flex gap-2">
+            {/* Category select */}
             <div className="flex min-w-36 flex-1 items-center gap-2">
               <Grid2X2 className="h-4 w-4 shrink-0 text-primary" />
               <div className="min-w-0 flex-1">
@@ -122,19 +121,22 @@ const CommunityHeader = ({
                   }
                   placeholder="Categories"
                   options={[
-                    { value: "", label: "Categories" },
+                    { value: "", label: "All Categories" },
                     ...COMMUNITY_CATEGORIES,
                   ]}
                 />
               </div>
             </div>
+
+            {/* Sort select — icon instead of text label */}
             <div className="flex min-w-32 flex-1 items-center gap-2">
-              <span className="text-[10px] text-muted-foreground">Sort by</span>
+              <ArrowUpDown className="h-4 w-4 shrink-0 text-primary" />
               <div className="min-w-0 flex-1">
                 <FilterSelect
                   ariaLabel="Sort communities"
                   value={sortBy}
                   onValueChange={(value) => onSortByChange(value as SortBy)}
+                  placeholder="Sort by"
                   options={SORT_OPTIONS.map((option) => ({
                     value: option.value,
                     label: option.label,
@@ -142,26 +144,6 @@ const CommunityHeader = ({
                 />
               </div>
             </div>
-          </div>
-        </div>
-        <div className="mt-5">
-          <p className="mb-2 text-xs font-semibold text-foreground">
-            Browse by Category
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {browseCategories.map((item) => (
-              <button
-                key={item.value}
-                type="button"
-                onClick={() =>
-                  item.value !== "__more" &&
-                  onCategoryChange(item.value as CommunityCategory | "")
-                }
-                className={`cursor-pointer rounded-full border px-3 py-1.5 text-[10px] font-medium transition ${category === item.value || (item.value === "" && !category) ? "border-primary bg-primary text-primary-foreground" : "border-border bg-card text-muted-foreground hover:border-primary hover:text-primary"}`}
-              >
-                {item.label}
-              </button>
-            ))}
           </div>
         </div>
       </div>

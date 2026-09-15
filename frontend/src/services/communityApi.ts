@@ -2,13 +2,24 @@ import { api } from "../lib/axiosInstance";
 import type { MutateObjectResponse } from "../types";
 import type { PaginatedCommunities } from "../types/community";
 
+export interface CreateCommunityResponse {
+  message: string;
+  community: { id: string; name: string; slug: string };
+}
+
+interface CommunityDetailResponse {
+  community: Record<string, unknown>;
+  userMembership: string | null;
+  pinnedNotice: Record<string, unknown> | null;
+  recentNotice: Record<string, unknown> | null;
+}
+
 const communityApi = {
-  createCommunity: async (formData: FormData): Promise<any> => {
-    const result = await api.post("/communities", formData, {
+  createCommunity: async (formData: FormData): Promise<CreateCommunityResponse> => {
+    const { data } = await api.post("/communities", formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    console.log(result);
-    return result.data;
+    return data;
   },
 
   getAllCommunities: async (
@@ -24,9 +35,8 @@ const communityApi = {
     return data;
   },
 
-  getCommunityBySlug: async (slug: string): any => {
+  getCommunityBySlug: async (slug: string): Promise<CommunityDetailResponse> => {
     const { data } = await api.get(`/communities/${slug}`);
-
     return data;
   },
 
@@ -46,3 +56,4 @@ const communityApi = {
 };
 
 export default communityApi;
+

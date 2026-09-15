@@ -5,7 +5,6 @@ import {
 
 
 import communityApi from "../services/communityApi";
-import toast from "react-hot-toast";
 
 
 export const useCreateCommunityMutation = () => {
@@ -13,9 +12,8 @@ export const useCreateCommunityMutation = () => {
   return useMutation({
     mutationFn: (formData: FormData) =>
       communityApi.createCommunity(formData),
-    onSuccess: (message) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["communities"] });
-      toast.success(message)
     },
   });
 };

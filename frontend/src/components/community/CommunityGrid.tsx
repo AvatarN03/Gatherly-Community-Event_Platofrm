@@ -56,8 +56,8 @@ const CommunityGrid = ({
       {/* Empty state */}
       {!isLoading && communities.length === 0 && (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <p className="text-lavender text-4xl mb-1">No communities found</p>
-          <p className="text-fog text-2xl my-4 font-light">
+          <p className="text-2xl font-semibold text-foreground">No communities found</p>
+          <p className="mt-2 text-sm text-muted-foreground">
             {search
               ? "Try a different search term"
               : "Be the first to create one"}
@@ -69,7 +69,7 @@ const CommunityGrid = ({
       <div ref={sentinelRef} className="h-4" />
 
       {!hasNextPage && communities.length > 0 && (
-        <div className="py-5 text-xs tracking-wide text-slate-400">
+        <div className="py-5 text-xs tracking-wide text-muted-foreground">
           Showing {communities.length} communities
         </div>
       )}

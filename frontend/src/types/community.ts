@@ -10,6 +10,8 @@ export interface CreateCommunity {
   location: string;
   latitude: number | null;
   longitude: number | null;
+  isPrivate: boolean;
+  requireApproval: boolean;
 }
 
 export interface CommunityView {

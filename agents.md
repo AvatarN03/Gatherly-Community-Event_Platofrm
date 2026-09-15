@@ -109,14 +109,39 @@ e:\Projects\Web-Dev\MERN-PERN\gatherly_v2
 - **Forms**: Formspree (v3.0.0) for form handling
 - **Charts**: Recharts (v3.10.1)
 - **Maps**: Leaflet (v1.9.4)
-- **Rich Text**: Slate (v0.126.2) with Slate-History and Slate-React
+- **Rich Text**: Slate (v0.126.2) with Slate-History and Slate-React (used for notices; community descriptions use plain textarea)
 - **Animations**: GSAP (v3.15.0)
 - **Icons**: Lucide (v1.41.0) and Lucide-React (v1.3.0)
 
 ### Key Components
 
 1. **Public** (`frontend/public/`) - Static assets (favicon, icons, images)
-2. **Source** (`frontend/src/`) - React component library, hooks, contexts, and types
+2. **Designs** (`frontend/public/designs/`) - UI design reference images (e.g. `community-events list page.png`, `CU-community.png`)
+3. **Source** (`frontend/src/`) - React component library, hooks, contexts, and types
+
+### Community List Page Components
+
+The community listing page (`frontend/src/pages/community/communities.tsx`) is composed of:
+
+- **CommunityHeader** (`frontend/src/components/community/CommunityHeader.tsx`) — Hero banner with title/eyebrow/description, search input, category dropdown (Radix Select with `Grid2X2` icon), and sort dropdown (Radix Select with `ArrowUpDown` icon). No separate "Browse by Category" pill row.
+- **CommunityGrid** (`frontend/src/components/community/CommunityGrid.tsx`) — Responsive 3-column grid of cards with infinite scroll (intersection observer sentinel), skeleton loading, empty state, and error state.
+- **CommunityCard** (`frontend/src/components/community/Card.tsx`) — Image section (h-44) with gradient overlay, category badge (bottom-left), community icon circle (bottom-right), title, 3-line description, footer with Members + Location stats, and a "Join" button.
+- **CardSkeleton** (`frontend/src/components/layouts/Skeleton.tsx`) — Animated loading placeholder mirroring the card layout structure.
+- **FilterSelect** — Inline Radix `Select` wrapper used by the header for category and sort dropdowns.
+- **UI primitives**: `Card`, `CardContent` (`frontend/src/components/ui/card.tsx`), `Select` family (`frontend/src/components/ui/select.tsx`).
+
+### Create Community Page Components
+
+The create community page (`frontend/src/pages/community/createCommunity.tsx`) features a sectioned form layout with a live preview sidebar:
+
+- **Section 1: Community Banner** — Uses `ImageUpload` component (`frontend/src/components/ImageUpload.tsx`) for image upload with preview.
+- **Section 2: Basic Information** — Name + Category (2-column grid), Location via `LocationPicker`, Description as `<textarea>` with char counter (0/500).
+- **Section 3: Community Settings** — Privacy toggle (Public/Private cards), Membership Approval toggle switch. Maps to `isPrivate` and `requireApproval` in Prisma schema.
+- **Section 4: Community Tags** — Tag input (Enter/comma to add), pill-style tags with remove.
+- **Live Preview Sidebar** — Desktop-only (`hidden lg:block`), sticky preview card showing banner, name, location, category, description.
+- **Data flow**: Form → FormData → `communityApi.createCommunity()` → `POST /communities` → multer → validate (Zod) → resize (sharp) → uploadToImageKit → controller.
+- **Validation**: Frontend Zod schema (`frontend/src/lib/schemas.ts`) + backend (`backend/prisma/schemas-validate.ts`). Backend returns field-level errors.
+- **Shared**: `Field` component, `FieldClass` constants — all use semantic tokens.
 
 ## Project Flow
 
@@ -133,7 +158,7 @@ e:\Projects\Web-Dev\MERN-PERN\gatherly_v2
 
 ### 3. Image Processing Pipeline
 - Uploaded images are sent to ImageKit via the backend
-- Processed images (resized, thumbnails) are stored in Cloudinary/ImageKit
+- Processed images (resized via sharp) are uploaded to ImageKit
 - Processed images are returned to the frontend for display
 
 ### 4. State Management
@@ -202,5 +227,15 @@ To prevent breaking the project structure, AI agents should:
    - New features should mirror existing code organization
    - Don't introduce inconsistent folder structures
    - Update related files (e.g., if adding a new endpoint, update routing and possibly related service files)
+
+6. **Styling rules**
+   - Always use semantic color tokens from `frontend/src/index.css` (`bg-background`, `bg-card`, `text-foreground`, `text-muted-foreground`, `bg-primary`, `text-primary-foreground`, `border-border`, `bg-accent`, etc.)
+   - Never hardcode colors like `bg-teal-200` or `text-slate-400` — the design system auto-switches between light and dark mode via `prefers-color-scheme`
+   - Use the Gatherly design tokens defined in `design.md` and `frontend/src/index.css`
+   - Consult design reference images in `frontend/public/designs/` when refining UI
+
+7. **Always update project memory**
+   - After making notable UI, dependency, or architecture changes, update `memory.md` with the current focus, process notes, and completed items
+   - Update `agents.md` if the project structure, component map, or conventions change
 
 By following these guidelines, AI agents can contribute safely without disrupting the established project architecture.
