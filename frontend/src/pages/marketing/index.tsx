@@ -4,11 +4,10 @@ import {HTW} from "../../components/marketing/HTW.tsx";
 
 const Marketing = () => {
   return (
-    <main className="w-full bg-mist">
+    <main className="w-full bg-transparent text-foreground">
       <Hero />
       <Services />
-        <HTW />
-
+      <HTW />
   </main>
   )
 }

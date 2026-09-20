@@ -1,6 +1,6 @@
 import {z} from "zod";
 import {COMMUNITY_CATEGORIES} from "../constant";
-import {getSlateText} from "./validation.ts";
+
 const categoryValues = COMMUNITY_CATEGORIES.map((c) => c.value) as [string, ...string[]];
 
 export const communitySchema = z.object({
@@ -13,14 +13,9 @@ export const communitySchema = z.object({
 
     description: z
         .string()
-        .refine(
-            (value) => getSlateText(value).length >= 10,
-            "Description must be at least 10 characters"
-        )
-        .refine(
-            (value) => getSlateText(value).length <= 1000,
-            "Description must be under 1000 characters"
-        ),
+        .trim()
+        .min(10, "Description must be at least 10 characters")
+        .max(500, "Description must be under 500 characters"),
 
     location: z
         .string()
@@ -38,10 +33,13 @@ export const communitySchema = z.object({
         .min(-180, "Invalid longitude")
         .max(180, "Invalid longitude"),
 
-
     category: z.enum(categoryValues, {
         message: "Please select a valid category",
     }),
+
+    isPrivate: z.boolean().default(false),
+
+    requireApproval: z.boolean().default(true),
 });
 
 

@@ -1,59 +1,68 @@
-import { Link } from 'react-router-dom'
-import { MapPin, Tag } from 'lucide-react'
+import { Link } from "react-router-dom";
+import { MapPin, Users } from "lucide-react";
+import type { CommunityView } from "../../types/community.ts";
+import { Card } from "../ui/card";
 
-const Card = ({ item }: any) => {
-    const createdBy = item.createdBy;
+const CommunityCard = ({ community }: { community: CommunityView }) => (
+  <Card className="group flex flex-col overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg">
+    <Link
+      to={`/communities/${community.slug}`}
+      className="flex h-full flex-col"
+    >
+      {/* Image section */}
+      <div className="relative h-44 w-full overflow-hidden bg-accent">
+        <img
+          src={community.imageUrl || "/image_holder.jpg"}
+          alt={community.name}
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
+        {/* Subtle gradient overlay at bottom of image */}
+        <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/30 to-transparent" />
 
-    return (
-        <Link
-            to={`/communities/${item.slug}`}
-            className="group relative block overflow-hidden border border-stone bg-night text-mist transition-all duration-300 hover:-translate-y-1.5 hover:border-orchid/60"
-        >
-            {/* Content — fixed height so cards line up regardless of title length */}
-            <div className="flex h-28 flex-col justify-between gap-2 p-4">
-                <h2 className="line-clamp-2 text-base font-medium text-mist transition-colors group-hover:text-purple-400">
-                    {item.name}
-                </h2>
+        {/* Category badge — bottom-left of image */}
+        <span className="absolute bottom-2.5 left-2.5 rounded-full bg-primary px-2.5 py-1 text-[10px] font-semibold text-primary-foreground shadow-sm">
+          {community.category}
+        </span>
 
-                <div className="flex items-center gap-2">
-                    <p className="flex items-center gap-1 rounded-full border-2 border-lavender/50 px-2 py-0.5 text-xs text-mist/60">
-                        <MapPin className="h-3 w-3 text-fog" />
-                        {item.location}
-                    </p>
+        {/* Community icon — bottom-right of image */}
+        <span className="absolute bottom-2.5 right-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-card/80 shadow-sm backdrop-blur-sm">
+          <Users className="h-3.5 w-3.5 text-primary" />
+        </span>
+      </div>
 
-                    <span className="flex items-center gap-1 text-xs text-mist/60">
-                        <Tag className="h-3.5 w-3.5" />
-                        {item.category}
-                    </span>
-                </div>
-            </div>
+      {/* Content section */}
+      <div className="flex flex-1 flex-col px-4 pb-4 pt-3">
+        {/* Title */}
+        <h3 className="line-clamp-1 text-sm font-semibold text-card-foreground transition-colors group-hover:text-primary">
+          {community.name}
+        </h3>
 
-            {/* Image — fixed height, full bleed, no padding */}
-            <img
-                src={item.imageUrl || "/image_holder.jpg"}
-                alt={item.name}
-                className="h-48 w-full object-cover"
-            />
+        {/* Description */}
+        <p className="mt-1.5 line-clamp-3 text-xs leading-[1.6] text-muted-foreground">
+          A welcoming community for people who share ideas, experiences, and
+          meaningful connections.
+        </p>
 
-            {/* Created by — fixed height, same left alignment/padding as content */}
-            {createdBy && (
-                <div className="flex h-16 items-center gap-3 border-t border-stone/50 px-4">
-                    <div className="h-8 w-8 shrink-0 overflow-hidden rounded-full">
-                        <img
-                            src={createdBy.imageUrl}
-                            alt={createdBy.name}
-                            className="h-full w-full object-cover"
-                        />
-                    </div>
+        {/* Footer: stats + join button */}
+        <div className="mt-auto flex items-center justify-between gap-3 pt-4">
+          <div className="flex items-center gap-3 text-[10px] text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <Users className="h-3 w-3" />
+              Members
+            </span>
+            <span className="flex items-center gap-1">
+              <MapPin className="h-3 w-3" />
+              {community.location || "Local"}
+            </span>
+          </div>
 
-                    <div className="min-w-0">
-                        <h4 className="truncate text-sm text-mist">{createdBy.name}</h4>
-                        <p className="truncate text-xs text-mist/60">{createdBy.email}</p>
-                    </div>
-                </div>
-            )}
-        </Link>
-    )
-}
+          <span className="inline-flex items-center rounded-md bg-primary px-3.5 py-1.5 text-[10px] font-semibold text-primary-foreground shadow-sm transition-colors group-hover:bg-primary/90">
+            Join
+          </span>
+        </div>
+      </div>
+    </Link>
+  </Card>
+);
 
-export default Card
+export default CommunityCard;

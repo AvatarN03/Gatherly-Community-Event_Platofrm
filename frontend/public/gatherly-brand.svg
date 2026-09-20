@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 226 48" role="img" aria-labelledby="title desc">
+  <title id="title">Gatherly</title>
+  <desc id="desc">Gatherly teal community mark and wordmark</desc>
+  <defs>
+    <linearGradient id="gatherly-teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d9488" />
+      <stop offset="1" stop-color="#10b981" />
+    </linearGradient>
+  </defs>
+  <g fill="url(#gatherly-teal)">
+    <circle cx="24" cy="10" r="6" />
+    <rect x="17" y="18" width="14" height="25" rx="7" />
+    <path d="M8 17a6 6 0 1 1 7 5v11a9 9 0 1 1-7-16Zm32 0a6 6 0 1 0-7 5v11a9 9 0 1 0 7-16Z" />
+  </g>
+  <text x="58" y="33" fill="#0f172a" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="28" font-weight="650" letter-spacing="-0.8">Gatherly</text>
+</svg>

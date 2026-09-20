@@ -1,39 +1,15 @@
 import axios from "axios";
 import toast from "react-hot-toast";
 
-interface ClerkWindow {
-  session?: {
-    getToken?: () => Promise<string | null>;
-  };
-}
-
-declare global {
-  interface Window {
-    Clerk?: ClerkWindow;
-  }
-}
-
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
 
-api.interceptors.request.use(
-  async (config) => {
-    const token = await window.Clerk?.session?.getToken?.();
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-
-// ----
-
-
+// NOTE: the Authorization header is attached via the `useAxiosAuth` hook
+// (see ../hooks/useAxiosAuth.ts), which uses Clerk's `useAuth().getToken()`
+// instead of reaching for `window.Clerk` directly. That avoids a race
+// condition where requests fire before Clerk has finished restoring the
+// session on initial page load.
 
 export const handleApiError = (error: unknown) => {
     console.error("API ERROR:", error);

@@ -13,8 +13,12 @@ import {
     Server,
     UsersRound,
     CalendarDays,
+    Crown,
+    Mic2,
+    HandHelping,
 } from "lucide-react";
 import type {LatLng} from "./types";
+import type { MemberRoleHandler } from "./types/membership";
 
 export const HomeNavLinks = [
     {
@@ -244,10 +248,10 @@ export const COMMUNITY_CATEGORIES = [
 export const SKELETON_COUNT = 9;
 
 export const FieldClass = {
-    formClass: "group flex items-center gap-2 w-full p-1 bg-night/60 border border-fog/20  text-mist placeholder-fog/40 text-xs md:text-sm focus:outline-none focus-within:border-lavender transition-colors cursor-pointer",
-    inputClass: "w-full px-3 py-2.5 bg-transparent border-transparent outline-none  text-mist placeholder-fog/40 text-sm ",
-    selectClass: "w-full px-3 py-2.5 bg-night border-transparent outline-none  text-mist placeholder-fog/40 text-sm ",
-    filterClass: "flex items-center gap-2  p-1 bg-night border border-fog/20  text-mist placeholder-fog/40 text-xs md:text-sm cursor-pointer"
+    formClass: "group flex items-center gap-2 w-full px-3 py-2 bg-muted/50 border border-border rounded-md text-foreground focus-within:ring-2 focus-within:ring-ring transition-colors",
+    inputClass: "w-full p-1.5 bg-transparent outline-none placeholder:text-muted-foreground text-sm",
+    selectClass: "w-full appearance-none bg-transparent px-1.5 py-0.5 text-sm text-foreground outline-none cursor-pointer",
+    filterClass: "flex items-center p-1 bg-accent border border-border rounded-md text-xs md:text-sm cursor-pointer"
 }
 
 
@@ -256,3 +260,48 @@ export const DEFAULT_ZOOM = 5;
 export const LOCATION_ZOOM = 16;
 export const SEARCH_DEBOUNCE_MS = 500;
 export const MIN_SEARCH_LENGTH = 3;
+
+export const ROLE_CONFIG = {
+  OWNER: {
+    label: "Owner",
+    icon: Crown,
+    className: "text-yellow-800 bg-yellow-300 border-yellow-700/60",
+  },
+  ADMIN: {
+    label: "Admin",
+    icon: ShieldCheck,
+    className: "text-blue-400  bg-blue-400/10  border-blue-400/20",
+  },
+  MEMBER: {
+    label: "Member",
+    icon: Users,
+    className: "text-emerald-400 bg-emerald-400/10 border-emerald-400/20",
+  },
+} as const;
+
+
+export const COMMUNITY_ASSIGNABLE_ROLES = ['ADMIN', 'MEMBER'] as const satisfies readonly MemberRoleHandler[]
+
+
+export const EVENT_ROLE_BADGES = {
+  HOST: {
+    label: "Host",
+    icon: Crown,
+    className: "text-amber-300 bg-amber-400/10 border-amber-400/20",
+  },
+  SPEAKER: {
+    label: "Speaker",
+    icon: Mic2,
+    className: "text-sky-300 bg-sky-400/10 border-sky-400/20",
+  },
+  COORDINATOR: {
+    label: "Coordinator",
+    icon: Users,
+    className: "text-lavender bg-orchid/10 border-orchid/20",
+  },
+  VOLUNTEER: {
+    label: "Volunteer",
+    icon: HandHelping,
+    className: "text-emerald-300 bg-emerald-400/10 border-emerald-400/20",
+  },
+} as const;

@@ -1,184 +1,147 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { CalendarDays, Menu, Users, X, LogIn, SquarePen } from "lucide-react";
+import { ArrowRight, CalendarDays, LogIn, Menu, SquarePen, Users, X } from "lucide-react";
 import { SignInButton, SignUpButton, useAuth, UserButton, useUser } from "@clerk/react";
-import { HomeNavLinks } from "../constant";
+
+const navLinkClass =
+  "navbar-link inline-flex cursor-pointer items-center gap-2 px-4 py-2.5 text-sm font-normal text-foreground transition-colors hover:text-primary";
 
 export const NonLoginNavbar = () => {
   const { isSignedIn, isLoaded } = useAuth();
   const { user } = useUser();
-
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const menuRef = useRef<HTMLElement>(null);
 
-  // Close on outside click
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef?.current?.contains(e.target as Node)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
     };
 
-    if (isMenuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
+    if (isMenuOpen) document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMenuOpen]);
 
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <header
-      className={`min-h-18 w-full flex items-center border-b-3 border-night/50 sticky top-0 z-50  transition-all duration-300 bg-mist/70 ${isMenuOpen
-        ? "bg-night backdrop-blur-none border-transparent"
-        : " backdrop-blur-sm"
-        }`}
-    >
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/75 backdrop-blur-lg shadow-[0_1px_10px_rgba(15,23,42,0.06)]">
       <nav
-        ref={menuRef}  // ← ref wraps only the nav, not the whole page
-        className="flex items-center justify-between max-w-400 mx-auto w-full px-3"
+        ref={menuRef}
+        aria-label="Primary navigation"
+        className="relative mx-auto flex min-h-16 w-full max-w-420 items-center gap-6 px-5 sm:px-7"
       >
-        <div className="flex items-center gap-4">
-
-          {/* Logo */}
-          <Link to="/" onClick={closeMenu}>
-            <div className="text-xl font-semibold tracking-wider flex items-center gap-1 group">
-              <img
-                src="/logo.png"
-                alt="Logo"
-                className="w-8 h-8 group-hover:scale-110 transition-transform group-hover:rotate-90 duration-300"
-              />
-              <h3 className="hidden md:block text-night text-lg font-semibold tracking-wider">
-                G
-                <span className="text-slate/70 group-hover:text-night  underline-hover transition-colors">
-                  atherly
-                </span>
-              </h3>
-            </div>
-          </Link>
-          <ul className="hidden md:flex items-center gap-4 mx-2 text-slate-400">
-            {
-              HomeNavLinks.map((navLink, idx) => (
-                <li key={idx} className={navLink.classes ?? ""} title={navLink.title}>
-                  <a title={navLink.title} href={navLink.link} className="text-slate-800 hover:text-forest underline-hover text-sm">
-                    {navLink.name}
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-
-        <div className="flex flex-1 items-center justify-end gap-2 md:gap-4">
-          {/* Desktop links */}
-          <ul className="space-x-4 hidden md:flex">
-            <Link
-              to="/communities"
-              className="hover:text-forest flex items-center transition-colors underline-hover text-xs lg:text-sm p-2 rounded-sm bg-deep-ocean hover:bg-fog"
-            >
-              <Users className="w-4 h-4 inline-block mr-1" />
-              Communities
-            </Link>
-            <Link
-              to="/events"
-              className="hover:text-forest flex items-center transition-colors underline-hover text-xs lg:text-sm p-2 rounded-sm bg-deep-ocean hover:bg-fog"
-            >
-              <CalendarDays className="w-4 h-4 inline-block mr-1" />
-              Events
-            </Link>
-          </ul>
-
-          <div className="min-w-24 flex items-center justify-center gap-3">
-            {isLoaded ? (
-              !isSignedIn ? (
-                <SignInButton mode="modal">
-                  <button className="px-3.5 py-2  flex items-center gap-2 text-sm cursor-pointer bg-orchid text-mist transition-colors hover:text-white hover:bg-orchid/80">
-                    <LogIn className="w-5 h-5" />Sign In
-                  </button>
-                </SignInButton>
-              ) : (
-                <>
-                  <Link
-                    to="/dashboard"
-                    className="px-2 py-1.5 border-orchid border text-sm text-forest hover:rounded-2xl bg-lavender hover:bg-orchid/10 transition-colors"
-                  >
-                    Dashboard
-                  </Link>
-                  <div className="hidden md:block">
-                    <UserButton />
-                  </div>
-                </>
-              )
-            ) : (
-              <div className="w-36 h-8 rounded-sm bg-stone animate-pulse" />
-            )}
-          </div>
-
-          {/* Hamburger button */}
-          <button
-            className="block md:hidden"
-            onClick={() => setIsMenuOpen((prev) => !prev)}
-          >
-            {isMenuOpen ? (
-              <X className="w-9 h-9 text-lavender" />
-            ) : (
-              <Menu className="w-9 h-9 text-lavender" />
-            )}
-          </button>
-        </div>
-
-        {/* Mobile menu */}
-        <div
-          className={`absolute top-full left-0 w-full bg-deep-ocean/90 backdrop-blur-sm flex flex-col items-center gap-4 px-4 p-4 md:hidden overflow-hidden transition-all duration-300 ease-in-out rounded-b-3xl border-4 border-orchid/50 border-t-0 ${isMenuOpen
-            ? "max-h-96 opacity-100"
-            : "max-h-0 opacity-0 pointer-events-none"
-            }`}
+        <Link
+          to="/"
+          onClick={closeMenu}
+          className="group flex shrink-0 items-center rounded-md gap-2 py-2 pr-2"
+          aria-label="Gatherly home"
         >
-          <div className="flex flex-col items-center w-full divide-y divide-fog gap-4">
-            <Link
-              to="/communities"
-              onClick={closeMenu}  // ← closes menu
-              className="flex items-center gap-8 text-mist text-2xl py-4 w-full"
-            >
-              <Users className="w-10 h-10" />
-              Communities
-            </Link>
+          <img
+            src="/logo2.svg"
+            alt="Gatherly logo"
+            className="h-9 w-9 transition-transform duration-300 ease-in-out group-hover:rotate-[20deg] group-hover:scale-[1.06]"
+          />
+          <h2 className="relative text-lg font-light tracking-[0.12em] uppercase text-foreground transition-colors duration-300 group-hover:text-primary sm:text-xl after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 after:bg-primary after:transition-all after:duration-300 group-hover:after:w-full">
+            Gatherly
+          </h2>
+        </Link>
 
-            <Link
-              to="/events"
-              onClick={closeMenu}  // ← closes menu
-              className="flex items-center gap-8 text-mist text-2xl py-4 w-full"
-            >
-              <CalendarDays className="w-10 h-10" />
-              Events
-            </Link>
+        <div className="hidden items-center gap-2 md:flex">
+          <Link to="/communities" className={navLinkClass}>
+            <Users className="h-4 w-4 text-teal-600" />
+            Communities
+          </Link>
+          <Link to="/events" className={navLinkClass}>
+            <CalendarDays className="h-4 w-4 text-teal-600" />
+            Events
+          </Link>
+        </div>
 
-            {isLoaded ? (
-              !isSignedIn ? (
-                <div className="flex items-center gap-3 w-full">
-                  <SignInButton mode="modal">
-                    <button className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-orchid/15 py-4 px-3 text-xl cursor-pointer text-mist transition-colors hover:text-white">
-                      <LogIn className="w-6 h-6" /> Sign In
-                    </button>
-                  </SignInButton>
+        <div className="ml-auto hidden items-center gap-2 md:flex text-xs" >
+          {!isLoaded ? (
+            <div className="h-9 w-28 animate-pulse rounded-md bg-slate-100" aria-label="Loading" />
+          ) : !isSignedIn ? (
+            <>
+              <SignInButton mode="modal">
+                <button className="inline-flex cursor-pointer items-center gap-2 rounded-md px-4 py-2.5  font-normal text-foreground transition-colors hover:text-primary">
+                  <LogIn className="h-4 w-4" />
+                  Sign In
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button className="inline-flex items-center gap-2 rounded-xs bg-teal-600 px-3.5 py-2  font-semibold text-white shadow-sm shadow-teal-600/20 transition-colors hover:bg-teal-700">
+                  <SquarePen className="h-4 w-4" />
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/dashboard"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-md bg-primary px-3.5 py-2 text-sm font-semibold text-primary-foreground shadow-sm shadow-teal-700/20 transition-colors hover:bg-teal-700 hover:shadow-md hover:shadow-teal-700/20"
+              >
+                Dashboard
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <div className="ml-1 border-l border-slate-200 pl-3">
+                <UserButton appearance={{ elements: { avatarBox: "h-9 w-9" } }} />
+              </div>
+            </>
+          )}
+        </div>
 
-                  <SignUpButton mode="modal">
-                    <button className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-orchid/60 py-4 px-3 text-xl cursor-pointer text-mist transition-colors hover:text-white">
-                      <SquarePen className="w-6 h-6" />
-                      Sign Up
-                    </button>
-                  </SignUpButton>
-                </div>
-              ) : (
-                <div className="flex items-center gap-3 my-4" onClick={closeMenu}>
-                  <UserButton />
-                  <span className="text-mist">{user?.firstName || "Profile"}</span>
-                </div>
-              )
-            ) : (
-              <div className="w-36 h-8 rounded-sm bg-stone animate-pulse" />
-            )}
+        <button
+          type="button"
+          aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
+          aria-expanded={isMenuOpen}
+          onClick={() => setIsMenuOpen((open) => !open)}
+          className="ml-auto inline-flex h-9 w-9 cursor-pointer items-center justify-center rounded-md text-foreground transition-colors hover:text-primary md:hidden"
+        >
+          {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
+
+        <div
+          className={`absolute left-0 top-full w-full overflow-hidden border-b border-border bg-background shadow-lg transition-[grid-template-rows,opacity] duration-200 md:hidden ${
+            isMenuOpen ? "grid grid-rows-[1fr] opacity-100" : "grid grid-rows-[0fr] opacity-0"
+          }`}
+        >
+          <div className="min-h-0">
+            <div className="flex flex-col gap-1 bg-background p-4">
+              <Link to="/communities" onClick={closeMenu} className={navLinkClass}>
+                <Users className="h-4 w-4 text-teal-600" /> Communities
+              </Link>
+              <Link to="/events" onClick={closeMenu} className={navLinkClass}>
+                <CalendarDays className="h-4 w-4 text-teal-600" /> Events
+              </Link>
+              <Link to="/about" onClick={closeMenu} className={navLinkClass}>About</Link>
+              <Link to="/contact" onClick={closeMenu} className={navLinkClass}>Contact</Link>
+
+              <div className="mt-2 flex items-center gap-2 border-t border-slate-100 pt-3">
+                {!isLoaded ? (
+                  <div className="h-9 w-full animate-pulse rounded-md bg-slate-100" />
+                ) : !isSignedIn ? (
+                  <>
+                    <SignInButton mode="modal">
+                      <button className="flex-1 cursor-pointer rounded-md border border-primary px-3 py-2 text-sm font-normal text-primary hover:bg-accent">Sign In</button>
+                    </SignInButton>
+                    <SignUpButton mode="modal">
+                      <button className="flex-1 cursor-pointer rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-teal-700">Sign Up</button>
+                    </SignUpButton>
+                  </>
+                ) : (
+                  <div className="flex w-full items-center justify-between">
+                    <Link to="/dashboard" onClick={closeMenu} className="text-sm font-semibold text-teal-700">Dashboard</Link>
+                    <div className="flex items-center gap-2 text-sm text-slate-600">
+                      <span>{user?.firstName || "Profile"}</span>
+                      <UserButton appearance={{ elements: { avatarBox: "h-9 w-9" } }} />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </nav>

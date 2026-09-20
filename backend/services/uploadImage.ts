@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import type { Request, Response, NextFunction } from "express";
 
 import multer from "multer";
 import { toFile } from "@imagekit/nodejs";
@@ -24,9 +24,8 @@ export const uploadToImageKit =
       if (existingFileId) {
         try {
           await imagekit.files.delete(existingFileId);
-          console.log("Old image deleted:", existingFileId);
-        } catch (deleteError) {
-          console.warn("Could not delete old image:", deleteError);
+        } catch {
+          // Old image cleanup is best-effort — don't block the upload
         }
       }
 
@@ -35,7 +34,7 @@ export const uploadToImageKit =
         fileName: req.file.originalname,
         folder,
       });
-      console.log("Image uploaded to ImageKit:", uploadResponse);
+
       req.imageUrl = uploadResponse.url;
       req.imageFileId = uploadResponse.fileId;
       next();

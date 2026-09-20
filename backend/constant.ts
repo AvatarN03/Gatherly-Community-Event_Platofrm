@@ -13,21 +13,21 @@ export const PLAN_LIMITS = {
 
 
 // community categories
-// export const CATEGORIES = [
-//   "General",
-//   "Technology",
-//   "Education",
-//   "Health",
-//   "Sports",
-//   "Arts",
-//   "Business",
-//   "Environment",
-//   "Food",
-//   "Gaming",
-//   "Music",
-//   "Travel",
-//   "Others",
-// ] as const;
+export const CATEGORIES = [
+  "General",
+  "Technology",
+  "Education",
+  "Health",
+  "Sports",
+  "Arts",
+  "Business",
+  "Environment",
+  "Food",
+  "Gaming",
+  "Music",
+  "Travel",
+  "Others",
+] as const;
 
 
 // event categories

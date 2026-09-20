@@ -14,11 +14,12 @@ export const requiredAuth = async (
 
     if (!userId) {
       return res.status(401).json({
-        error: "Unauthorized",
+        error: "Middleware: Unauthorized",
       });
     }
+    console.log("requiredAuth :", userId);
 
-    req.user = await findOrCreateUser(userId);
+    req.userId = userId;
 
     next();
   } catch (error) {
@@ -36,8 +37,38 @@ export const optionalAuth = async (
     const { userId } = getAuth(req);
 
     if (userId) {
-        req.user = await findOrCreateUser(userId);
+        req.userId = userId;
     }
 
+  console.log(
+    "optionalAuth",
+      userId,
+      req.userId,
+    )
+
     next();
+};
+
+
+export const requiredUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { userId } = getAuth(req);
+
+    if (!userId) {
+      return res.status(401).json({
+        error: "Unauthorized",
+      });
+    }
+    console.log("requiredUser", userId);
+
+    req.user = await findOrCreateUser(userId);
+
+    next();
+  } catch (error) {
+    next(error);
+  }
 };

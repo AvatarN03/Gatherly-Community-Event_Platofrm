@@ -68,10 +68,12 @@ const Communities = () => {
     }
 
     return (
-        <div className="min-h-screen bg-cocoa/30  relative">
+        <div className="min-h-screen bg-background text-foreground">
 
             <CommunityHeader
-                title="Communities"
+                title="Community"
+                eyebrow="EXPLORE & CONNECT"
+                description="Discover like-minded people, join communities, and be part of something bigger."
                 search={search}
                 onChange={handleSearchChange}
                 category={category}

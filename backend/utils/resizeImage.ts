@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import sharp from "sharp";
 
 const MAX_MEGAPIXELS = 20_000_000; // stay safely under ImageKit's 25MP ceiling

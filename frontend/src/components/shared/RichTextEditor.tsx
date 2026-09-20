@@ -32,10 +32,7 @@ const RichTextEditor = ({
         []
     );
 
-    const initialValue = useMemo(
-        () => deserialize(value),
-        [] // eslint-disable-line react-hooks/exhaustive-deps -- Slate only reads this once, on mount
-    );
+    const editorValue = useMemo(() => deserialize(value ?? ""), [value]);
 
     const renderElement = useCallback(
         (props: RenderElementProps) => <Element {...props} />,
@@ -56,13 +53,17 @@ const RichTextEditor = ({
             className={`
                 overflow-hidden
                 border
-                border-fog/20
-                bg-night/60
+                border-teal-200
+                bg-teal-200
+                rounded-md
+                shadow-sm
+                
+                shadow-teal-100
                 transition-colors
-                ${disabled ? "opacity-50" : ""}
+                ${disabled ? "opacity-70" : ""}
             `}
         >
-            <Slate editor={editor} initialValue={initialValue} onChange={handleChange}>
+            <Slate editor={editor} initialValue={editorValue} onChange={handleChange}>
                 <Toolbar editor={editor} disabled={disabled}/>
 
                 <Editable
@@ -76,9 +77,12 @@ const RichTextEditor = ({
                         w-full
                         p-4
                         text-sm
-                        text-mist
+                        max-h-100
+                        overflow-hidden
+                        overflow-y-auto
+                        text-teal-900
                         outline-none
-                        placeholder:text-fog/40
+                        placeholder:text-teal-700/50
                     "
                         onKeyDown={(event) => {
                             if (!event.ctrlKey && !event.metaKey) {

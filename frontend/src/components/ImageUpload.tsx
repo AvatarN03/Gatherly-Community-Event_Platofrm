@@ -77,17 +77,17 @@ export const ImageUpload = ({
   }
 
   return (
-    <Field label={label}>
+    <Field attach="image" label={label}>
       {displayUrl ? (
         // Wrapping the whole preview in a <label> means clicking anywhere on
         // the image (not just a dedicated button) opens the file picker —
         // covers both "swap the existing image" and "pick a different new
         // one" without adding any extra buttons/space.
-        <label className="relative rounded-xl overflow-hidden border border-fog cursor-pointer group block">
+        <label className="relative rounded-md overflow-hidden border border-border cursor-pointer group block">
           <img src={displayUrl} alt="Preview" className="w-full h-64 object-cover" />
 
           <div className="absolute inset-0 flex items-center justify-center bg-black/0 group-hover:bg-black/30 transition-colors">
-            <span className="opacity-0 group-hover:opacity-100 text-mist text-xs font-medium px-3 py-1.5 bg-slate-900/80 rounded-lg transition-opacity">
+            <span className="opacity-0 group-hover:opacity-100 text-white text-xs font-medium px-3 py-1.5 bg-primary rounded-lg transition-opacity">
               Click to {file ? 'change' : 'replace'} image
             </span>
           </div>
@@ -103,20 +103,21 @@ export const ImageUpload = ({
                 clearImage()
               }}
               disabled={disabled}
-              className="absolute top-3 right-3 p-1.5 bg-slate-900/80 hover:bg-slate-900 rounded-full text-mist cursor-pointer transition-colors z-10"
+              className="absolute top-3 right-3 p-1.5 bg-destructive/80 text-white rounded-full cursor-pointer transition-colors z-10 hover:bg-destructive"
             >
               <X className="w-3.5 h-3.5" />
             </button>
           )}
 
           {file && (
-            <div className="absolute bottom-0 left-0 right-0 px-4 py-2 bg-slate-900/60 text-fog/80 text-xs truncate">
+            <div className="absolute bottom-0 left-0 right-0 px-4 py-2 bg-card/80 backdrop-blur-sm text-foreground text-xs truncate">
               {file.name}
             </div>
           )}
 
           <input
             type="file"
+            id="image"
             accept={ACCEPTED_TYPES.join(',')}
             onChange={handleImageChange}
             disabled={disabled}
@@ -124,12 +125,13 @@ export const ImageUpload = ({
           />
         </label>
       ) : (
-        <label className="flex flex-col items-center justify-center h-64 border-2 border-dashed border-fog/60 hover:border-fog rounded-xl cursor-pointer transition-colors group">
-          <ImagePlus className="w-8 h-8 text-lavender group-hover:text-mist transition-colors mb-3" />
-          <p className="text-mist text-sm font-medium">Click to upload image</p>
-          <p className="text-fog text-xs mt-1 underline underline-offset-2">PNG, JPG, WEBP up to {MAX_FILE_SIZE_MB} MB</p>
+        <label className="flex flex-col items-center justify-center h-56 border-2 border-dashed border-border hover:border-primary rounded-xl cursor-pointer transition-colors group">
+          <ImagePlus className="w-8 h-8 text-primary group-hover:text-primary/80 transition-colors mb-3" />
+          <p className="text-foreground text-sm font-medium">Click to upload or drag and drop</p>
+          <p className="text-muted-foreground text-xs mt-1">JPG, PNG or WebP · Max {MAX_FILE_SIZE_MB}MB</p>
           <input
-            type="file"
+              type="file"
+              id="image"
             accept={ACCEPTED_TYPES.join(',')}
             onChange={handleImageChange}
             disabled={disabled}

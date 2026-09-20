@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
 import communityApi from "../services/communityApi";
 import type { SortBy } from "../types";
 import type { CommunityCategory } from "../types/community";
@@ -29,5 +29,14 @@ export const useCommunitiesInfiniteQuery = (
 
     retry: 2,
     retryDelay: 1000,
+  });
+};
+
+
+export const useCommunityBySlugQuery = (slug?: string, isAuthLoaded = true) => {
+  return useQuery({
+    queryKey: ["community", slug],
+    queryFn: () => communityApi.getCommunityBySlug(slug!),
+    enabled: !!slug && isAuthLoaded,
   });
 };
