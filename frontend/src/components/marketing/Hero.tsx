@@ -6,7 +6,7 @@ const communityImage =
 
 export const Hero = () => {
   return (
-    <section id="home" className="bg-background px-4 py-2 text-foreground sm:px-6  lg:px-8 mb-8">
+    <section id="home" className="bg-transparent px-4 py-2 text-foreground sm:px-6  lg:px-8 mb-8">
       <div className="mx-auto grid min-h-[calc(100svh-4rem)] max-w-350 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-stretch lg:gap-16 ">
         <div className="flex max-w-2xl flex-col justify-end  items-baseline mb-5">
           <p className="mb-5 text-xs font-medium uppercase tracking-[0.18em] text-primary">

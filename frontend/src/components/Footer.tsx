@@ -4,7 +4,7 @@ import { CalendarPlus, Compass, Users } from "lucide-react";
 
 export const Footer = () => {
   return (
-    <footer className="border-t border-border bg-background px-6 py-12 md:px-12">
+    <footer className="relative border-t border-border bg-card rounded-t-[2.5rem] md:rounded-t-[3.5rem] px-6 py-12 md:px-12 overflow-hidden shadow-[0_-12px_40px_rgba(0,0,0,0.35)]">
 
       {/* Top grid */}
       <div className="mx-auto grid max-w-350 grid-cols-1 gap-10 md:grid-cols-4">
@@ -105,6 +105,34 @@ export const Footer = () => {
             </a>
           ))}
         </div>
+      </div>
+
+      {/* Giant brand watermark with project teal/emerald gradient, logo icon, and ambient glow */}
+      <div className="relative mt-12 flex flex-wrap items-center justify-center gap-4 sm:gap-8 overflow-hidden py-4" aria-hidden="true">
+        {/* Ambient brand glow/shadow behind the text and logo */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 top-1/4 -z-10 flex items-center justify-center">
+          <div className="h-44 w-3/4 max-w-4xl rounded-full bg-teal-500/20 blur-3xl" />
+        </div>
+
+        {/* Brand logo icon beside the text */}
+        <img
+          src="/logo2.svg"
+          alt=""
+          className="h-14 w-14 sm:h-24 sm:w-24 md:h-32 md:w-32 lg:h-40 lg:w-40 shrink-0 object-contain drop-shadow-[0_8px_30px_rgba(45,212,191,0.4)] transition-transform duration-500 hover:rotate-12"
+        />
+
+        <h2
+          className="select-none text-center font-extrabold uppercase leading-none tracking-wider drop-shadow-[0_8px_30px_rgba(20,184,166,0.3)]"
+          style={{
+            fontSize: "clamp(3.5rem, 13.5vw, 13rem)",
+            background: "linear-gradient(180deg, #99f6e4 0%, #2dd4bf 28%, #14b8a6 55%, #0f766e 80%, #042f2e 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+          }}
+        >
+          Gatherly
+        </h2>
       </div>
     </footer>
   );

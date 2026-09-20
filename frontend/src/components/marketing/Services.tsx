@@ -13,7 +13,7 @@ export const Services = () => {
 
     return (
         <section
-            className="relative mx-auto min-h-screen w-full overflow-hidden bg-[var(--services-background)] px-5 py-14 text-[var(--services-text)] sm:px-8 md:px-14 md:py-20">
+            className="relative mx-auto min-h-screen w-full overflow-hidden px-5 py-14 text-[var(--services-text)] sm:px-8 md:px-14 md:py-20">
             <div className="space-y-10 md:space-y-14 max-w-[1400px] mx-auto">
                 <h2 className={"max-w-3xl text-4xl font-semibold tracking-[-0.03em] text-[var(--services-text)] md:text-5xl"}>
                     Everything You Need to Run a Community

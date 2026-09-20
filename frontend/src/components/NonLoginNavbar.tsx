@@ -26,7 +26,7 @@ export const NonLoginNavbar = () => {
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border bg-background shadow-[0_1px_10px_rgba(15,23,42,0.06)]">
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/75 backdrop-blur-lg shadow-[0_1px_10px_rgba(15,23,42,0.06)]">
       <nav
         ref={menuRef}
         aria-label="Primary navigation"
@@ -41,9 +41,9 @@ export const NonLoginNavbar = () => {
           <img
             src="/logo2.svg"
             alt="Gatherly logo"
-            className="h-9 w-9 transition-transform duration-200 group-hover:scale-[1.04]"
+            className="h-9 w-9 transition-transform duration-300 ease-in-out group-hover:rotate-[20deg] group-hover:scale-[1.06]"
           />
-          <h2 className="text-lg font-semibold tracking-[-0.03em] text-foreground transition-colors group-hover:text-primary sm:text-xl">
+          <h2 className="relative text-lg font-light tracking-[0.12em] uppercase text-foreground transition-colors duration-300 group-hover:text-primary sm:text-xl after:absolute after:bottom-0 after:left-0 after:h-[1.5px] after:w-0 after:bg-primary after:transition-all after:duration-300 group-hover:after:w-full">
             Gatherly
           </h2>
         </Link>
